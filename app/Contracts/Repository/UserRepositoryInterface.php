@@ -2,6 +2,9 @@
 
 namespace App\Contracts\Repository;
 
+use App\Models\User;
+use Illuminate\Support\Facades\App;
+
 interface UserRepositoryInterface {
 
     /**
@@ -24,11 +27,10 @@ interface UserRepositoryInterface {
      * Create a user and persist to database
      *
      * @param array $data
-     * @param bool $admin
      *
-     * @return mixed
+     * @return User
      */
-    public function create(array $data, bool $admin);
+    public function create(array $data);
 
     /**
      * Update a user by UUID

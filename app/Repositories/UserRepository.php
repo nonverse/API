@@ -36,9 +36,9 @@ class UserRepository implements UserRepositoryInterface
      *
      * @param array $data
      *
-     * @return Response
+     * @return User
      */
-    public function create(array $data): Response
+    public function create(array $data): User
     {
         $user = new User;
         $user->uuid = $data['uuid'];
@@ -46,17 +46,11 @@ class UserRepository implements UserRepositoryInterface
         $user->name_first = $data['name_first'];
         $user->name_last = $data['name_last'];
         $user->email = $data['email'];
-        $user->password = $data['passwordhash'];
+        $user->password = $data['password'];
 
         $query = $user->save();
 
-        if ($query) {
-            $response = response($data['uuid'], 200);
-        } else {
-            $response = response('Unable to query database', 500);
-        }
-
-        return $response;
+        return $user;
     }
 
     /**
