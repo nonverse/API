@@ -10,11 +10,6 @@ use Illuminate\Support\Str;
 class UserCreationService
 {
     /**
-     * @var Hash
-     */
-    private $hash;
-
-    /**
      * @var UserRepositoryInterface
      */
     private $repository;
@@ -23,10 +18,8 @@ class UserCreationService
      * UserCreationService Constructor
      */
     public function __construct(
-        Hash $hash,
         UserRepositoryInterface $repository
     ) {
-        $this->hash = $hash;
         $this->repository = $repository;
     }
 
@@ -39,7 +32,7 @@ class UserCreationService
      */
     public function handle(array $data): User
     {
-        $data['password'] = $this->hash->make($data['password']);
+        $data['password'] = Hash::make($data['password']);
         $user = $this->repository->create(array_merge(
             $data,
             ['uuid' => Str::uuid()]
