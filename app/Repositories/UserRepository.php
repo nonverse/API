@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Contracts\Repository\UserRepositoryInterface;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
 
@@ -20,7 +21,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * Get details for a specific user by UUID
+     * Get details for a specific user by UUID or Email
      *
      * @param $uuid
      *
@@ -28,7 +29,13 @@ class UserRepository implements UserRepositoryInterface
      */
     public function get($uuid): object
     {
-        // TODO: Implement get() method.
+        if (Str::isUuid($uuid)) {
+            $user = User::query()->find($uuid);
+        } else {
+            $user = User::query()->where('email', $uuid)->first();
+        }
+
+        return $user;
     }
 
     /**
