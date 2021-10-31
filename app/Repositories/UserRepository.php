@@ -29,9 +29,10 @@ class UserRepository implements UserRepositoryInterface
      */
     public function get($uuid): object
     {
+        $user = [];
         if (Str::isUuid($uuid)) {
             $user = User::query()->find($uuid);
-        } else {
+        } else if (filter_var($uuid, FILTER_VALIDATE_EMAIL)) {
             $user = User::query()->where('email', $uuid)->first();
         }
 
