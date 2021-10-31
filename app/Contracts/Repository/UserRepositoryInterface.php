@@ -15,7 +15,7 @@ interface UserRepositoryInterface {
     public function index();
 
     /**
-     * Get details for a specific user by UUID
+     * Get details for a specific user by UUID or Email
      *
      * @param $uuid
      *
