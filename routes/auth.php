@@ -5,11 +5,19 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Auth Routes
+| CORS protected auth routes
+| These routes can only be accessed by apps on the .nonverse.net domain
 |--------------------------------------------------------------------------
 
-| Endpoint: /*
+| Endpoint: /auth
 |
 */
 
-Route::post('/create-new-user', [\App\Http\Controllers\UserController::class, 'store']);
+Route::group(['middleware' => 'web'], function() {
+    Route::post('/create-new-user', [\App\Http\Controllers\UserController::class, 'store']);
+
+    Route::group(['prefix' => 'verify'], function() {
+        Route::post('validate-user-email', [\App\Http\Controllers\UserController::class, 'validateEmail']);
+    });
+});
+
