@@ -3,26 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repository\UserRepositoryInterface;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use App\Services\Users\UserCreationService;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
     /**
      * @var UserCreationService
      */
     private $creationService;
 
     public function __construct(
-        UserRepositoryInterface $userRepository,
         UserCreationService $creationService
-    ) {
-        $this->userRepository = $userRepository;
+    )
+    {
         $this->creationService = $creationService;
     }
 
@@ -31,13 +29,16 @@ class UserController extends Controller
      *
      * @param Request $request
      *
-     * @return bool
+     * @return Response
      */
-    public function validateEmail(Request $request): bool
+    public function validateEmail(Request $request): Response
     {
-        $user =  $this->userRepository->get($request->input('email'));
+        $rule = array('email' => 'unique:users,email');
+        $validator = Validator::make($request->all(), $rule);
 
-        return (bool)$user;
+        return $validator->fails()
+            ? response('email exists', 422)
+            : response('email available', 200);
     }
 
     /**
@@ -47,7 +48,8 @@ class UserController extends Controller
      *
      * @return string
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
             'email' => 'required|email|unique:users,email',
             'username' => 'required|unique:users,username',
