@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repository\UserRepositoryInterface;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use App\Services\Users\UserCreationService;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -17,28 +17,45 @@ class UserController extends Controller
      */
     private $creationService;
 
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $repository;
+
     public function __construct(
-        UserCreationService $creationService
+        UserCreationService     $creationService,
+        UserRepositoryInterface $repository
     )
     {
+        $this->repository = $repository;
         $this->creationService = $creationService;
     }
 
     /**
-     * Check if a request email is already in use by a registered user
+     * Verify if a incoming request is linked to an existing account
+     * and return the user it belongs to
      *
      * @param Request $request
-     *
-     * @return Response
+     * @return JsonResponse|int
      */
-    public function validateEmail(Request $request): Response
+    public function verifyEmail(Request $request)
     {
-        $rule = array('email' => 'unique:users,email');
-        $validator = Validator::make($request->all(), $rule);
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+        $user = $this->repository->get($request->input('email'));
 
-        return $validator->fails()
-            ? response('email exists', 422)
-            : response('email available', 200);
+        if (!$user) {
+            return Response::HTTP_NOT_FOUND;
+        }
+
+        return new JsonResponse([
+            'data' => [
+                'email' => $user->email,
+                'name_first' => $user->name_first,
+                'name_last' => $user->name_last
+            ]
+        ]);
     }
 
     /**
@@ -58,8 +75,13 @@ class UserController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
-        $this->creationService->handle($request->all());
+        $user = $this->creationService->handle($request->all());
 
-        return 'Done';
+        return new JsonResponse([
+            'data' => [
+                'complete' => 'true',
+                'uuid' => $user->uuid,
+            ]
+        ]);
     }
 }
