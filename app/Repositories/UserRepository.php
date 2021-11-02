@@ -25,9 +25,9 @@ class UserRepository implements UserRepositoryInterface
      *
      * @param $uuid
      *
-     * @return object
+     * @return mixed
      */
-    public function get($uuid): object
+    public function get($uuid)
     {
         $user = [];
         if (Str::isUuid($uuid)) {

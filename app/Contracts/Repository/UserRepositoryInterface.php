@@ -19,9 +19,9 @@ interface UserRepositoryInterface {
      *
      * @param $uuid
      *
-     * @return object
+     * @return mixed
      */
-    public function get($uuid): object;
+    public function get($uuid);
 
     /**
      * Create a user and persist to database
@@ -30,7 +30,7 @@ interface UserRepositoryInterface {
      *
      * @return User
      */
-    public function create(array $data);
+    public function create(array $data): User;
 
     /**
      * Update a user by UUID
