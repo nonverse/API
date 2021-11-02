@@ -12,12 +12,10 @@ use Illuminate\Support\Facades\Route;
 | Endpoint: /auth
 |
 */
-
-Route::group(['middleware' => 'web'], function() {
-    Route::post('/create-new-user', [\App\Http\Controllers\UserController::class, 'store']);
-
-    Route::group(['prefix' => 'verify'], function() {
-        Route::post('validate-user-email', [\App\Http\Controllers\UserController::class, 'validateEmail']);
-    });
+Route::group(['prefix' => 'verify'], function() {
+    Route::post('validate-new-email', [\App\Http\Controllers\Auth\ValidationController::class, 'validateNewEmail']);
+    Route::get('/verify-user-email', [\App\Http\Controllers\UserController::class, 'verifyEmail']);
 });
+
+Route::post('/create-new-user', [\App\Http\Controllers\UserController::class, 'store']);
 
