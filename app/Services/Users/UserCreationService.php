@@ -33,11 +33,10 @@ class UserCreationService
     public function handle(array $data): User
     {
         $data['password'] = Hash::make($data['password']);
-        $user = $this->repository->create(array_merge(
+
+        return $this->repository->create(array_merge(
             $data,
             ['uuid' => Str::uuid()]
         ));
-
-        return $user;
     }
 }
