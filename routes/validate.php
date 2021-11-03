@@ -5,12 +5,11 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| CORS protected auth routes
+| CORS protected input validation routes
 | These routes can only be accessed by apps on the .nonverse.net domain
 |--------------------------------------------------------------------------
-| Endpoint: /auth
+| Endpoint: /validator
 |
 */
 
-Route::post('/create-new-user', [\App\Http\Controllers\UserController::class, 'store']);
-
+Route::post('/validate-new-email', [\App\Http\Controllers\Validation\ValidationController::class, 'validateNewEmail']);
