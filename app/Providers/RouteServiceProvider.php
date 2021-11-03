@@ -43,7 +43,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/validate.php'));
             Route::prefix('user')
-                ->middleware(['web', 'auth'])
+                ->middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/user.php'));
             Route::prefix('user/store')

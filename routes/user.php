@@ -12,8 +12,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Create user
+// Create user (No auth required)
 Route::post('create-new-user', [\App\Http\Controllers\UserController::class, 'store']);
 
+// Auth required
+Route::group(['middleware' => 'auth'], function() {
 // Update a user
-Route::post('update', [\App\Http\Controllers\UserController::class, 'update']);
+    Route::post('update', [\App\Http\Controllers\UserController::class, 'update']);
+});
