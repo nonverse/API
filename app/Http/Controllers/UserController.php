@@ -57,4 +57,15 @@ class UserController extends Controller
             ]
         ]);
     }
+
+    public function update(Request $request) {
+        $data = $request->except([
+            'password',
+            'use_totp',
+            'totp_secret',
+            'admin'
+        ]);
+
+        return $this->repository->update($request->user()->uuid, $data);
+    }
 }

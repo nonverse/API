@@ -38,9 +38,9 @@ interface UserRepositoryInterface {
      * @param $uuid
      * @param array $data
      *
-     * @return bool
+     * @return User|bool
      */
-    public function update($uuid, array $data): bool;
+    public function update($uuid, array $data);
 
     /**
      * Delete a registered user from database

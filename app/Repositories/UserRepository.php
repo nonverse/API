@@ -3,8 +3,9 @@
 namespace App\Repositories;
 
 use App\Contracts\Repository\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
 
 class UserRepository implements UserRepositoryInterface
@@ -67,11 +68,26 @@ class UserRepository implements UserRepositoryInterface
      * @param $uuid
      * @param array $data
      *
-     * @return bool
+     * @return User|bool
      */
-    public function update($uuid, array $data): bool
+    public function update($uuid, array $data)
     {
-        // TODO: Implement update() method.
+        try {
+            $user = User::query()->find($uuid)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
+
+        try {
+            $user->fill($data);
+            if ($user->isDirty()) {
+                $user->save();
+            }
+        } catch (QueryException $e) {
+            return false;
+        }
+
+        return $user;
     }
 
     /**
