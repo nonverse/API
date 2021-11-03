@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['validator/*', 'auth/*', 'sanctum/csrf-cookie'],
+    'paths' => ['validator/*', 'user/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
