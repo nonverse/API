@@ -32,33 +32,6 @@ class UserController extends Controller
     }
 
     /**
-     * Verify if a incoming request is linked to an existing account
-     * and return the user it belongs to
-     *
-     * @param Request $request
-     * @return JsonResponse|int
-     */
-    public function verifyEmail(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-        $user = $this->repository->get($request->input('email'));
-
-        if (!$user) {
-            return Response::HTTP_NOT_FOUND;
-        }
-
-        return new JsonResponse([
-            'data' => [
-                'email' => $user->email,
-                'name_first' => $user->name_first,
-                'name_last' => $user->name_last
-            ]
-        ]);
-    }
-
-    /**
      * Create a new user and store in database
      *
      * @param Request $request
