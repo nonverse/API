@@ -5,12 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| CORS protected auth routes
-| These routes can only be accessed by apps on the .nonverse.net domain
+| User store API routes that can be access by a session authenticated user or
+| via a valid API key
 |--------------------------------------------------------------------------
-| Endpoint: /auth
+| Endpoint: /user/store
 |
 */
-
-Route::post('/create-new-user', [\App\Http\Controllers\UserController::class, 'store']);
-
