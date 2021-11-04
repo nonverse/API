@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repository\UserRepositoryInterface;
+use App\Services\Users\UserUpdateService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,17 +19,18 @@ class UserController extends Controller
     private $creationService;
 
     /**
-     * @var UserRepositoryInterface
+     * @var UserUpdateService
      */
-    private $repository;
+    private $updateService;
 
     public function __construct(
         UserCreationService     $creationService,
+        UserUpdateService       $updateService,
         UserRepositoryInterface $repository
     )
     {
-        $this->repository = $repository;
         $this->creationService = $creationService;
+        $this->updateService = $updateService;
     }
 
     /**
@@ -58,14 +60,14 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
         $data = $request->except([
-            'password',
             'use_totp',
             'totp_secret',
             'admin'
         ]);
 
-        return $this->repository->update($request->user()->uuid, $data);
+        return $this->updateService->handle($request->user()->uuid, $data);
     }
 }
