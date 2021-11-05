@@ -16,7 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('/', [\App\Http\Controllers\UserController::class, 'store']);
 
 // Auth required
-Route::group(['middleware' => 'auth'], function() {
-// Update a user
+Route::group(['middleware' => 'auth'], function () {
+    // Update a user
     Route::post('update', [\App\Http\Controllers\UserController::class, 'update']);
+});
+
+// Auth or API token required
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    //
 });
