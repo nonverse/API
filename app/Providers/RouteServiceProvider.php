@@ -46,10 +46,6 @@ class RouteServiceProvider extends ServiceProvider
                 ->middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/user.php'));
-            Route::prefix('user/store')
-                ->middleware(['web', 'auth:sanctum'])
-                ->namespace($this->namespace)
-                ->group(base_path('routes/user-store.php'));
         });
     }
 
