@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Create user (No auth required)
-Route::post('create-new-user', [\App\Http\Controllers\UserController::class, 'store']);
+Route::post('/', [\App\Http\Controllers\UserController::class, 'store']);
 
 // Auth required
 Route::group(['middleware' => 'auth'], function() {
