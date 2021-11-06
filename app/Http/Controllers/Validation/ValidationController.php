@@ -27,4 +27,14 @@ class ValidationController extends Controller
             : response('email available', 200);
     }
 
+    public function validateNewUser(Request $request)
+    {
+        $rule = array('username' => 'unique:users,username');
+        $validator = Validator::make($request->all(), $rule);
+
+        return $validator->fails()
+            ? response('username exists', 422)
+            : response('email available', 200);
+    }
+
 }
