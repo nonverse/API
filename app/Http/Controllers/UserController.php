@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\Users\UserCreationService;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
@@ -52,9 +53,11 @@ class UserController extends Controller
 
         $user = $this->creationService->handle($request->all());
 
+        $request->session()->regenerate();
+        Auth::loginUsingId($user->uuid, false);
         return new JsonResponse([
             'data' => [
-                'complete' => 'true',
+                'complete' => true,
                 'uuid' => $user->uuid,
             ]
         ]);
