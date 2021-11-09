@@ -45,9 +45,9 @@ class UserController extends Controller
      *
      * @param Request $request
      *
-     * @return string
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'email' => 'required|email|unique:users,email',
