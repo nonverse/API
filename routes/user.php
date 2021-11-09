@@ -18,10 +18,11 @@ Route::post('/', [\App\Http\Controllers\UserController::class, 'store']);
 // Auth required
 Route::group(['middleware' => 'auth'], function () {
     // Update a user
-    Route::post('update', [\App\Http\Controllers\UserController::class, 'update']);
+    Route::post('store', [\App\Http\Controllers\UserController::class, 'update']);
 });
 
 // Auth or API token required
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    //
+    // Get a user's details
+    Route::get('store', [\App\Http\Controllers\UserController::class, 'get'])->middleware('ability:store:view');
 });
