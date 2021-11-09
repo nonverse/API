@@ -3,14 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Repository\UserRepositoryInterface;
+use App\Services\Users\UserDeletionService;
 use App\Services\Users\UserUpdateService;
+use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Encryption\Encrypter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\Users\UserCreationService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
+use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
+use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
+use PragmaRX\Google2FA\Google2FA;
 
 class UserController extends Controller
 {
@@ -25,19 +32,47 @@ class UserController extends Controller
     private $updateService;
 
     /**
+     * @var UserDeletionService
+     */
+    private $deletionService;
+
+    /**
      * @var UserRepositoryInterface
      */
     private $repository;
 
+    /**
+     * @var Hasher
+     */
+    private $hasher;
+
+    /**
+     * @var Encrypter
+     */
+    private $encrypter;
+
+    /**
+     * @var Google2FA
+     */
+    private $google2FA;
+
     public function __construct(
         UserCreationService     $creationService,
         UserUpdateService       $updateService,
-        UserRepositoryInterface $repository
+        UserDeletionService     $deletionService,
+        UserRepositoryInterface $repository,
+        Hasher                  $hasher,
+        Encrypter               $encrypter,
+        Google2FA               $google2FA
     )
     {
         $this->creationService = $creationService;
         $this->updateService = $updateService;
+        $this->deletionService = $deletionService;
         $this->repository = $repository;
+        $this->hasher = $hasher;
+        $this->encrypter = $encrypter;
+        $this->google2FA = $google2FA;
     }
 
     /**
@@ -69,7 +104,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function get(Request $request) {
+    public function get(Request $request)
+    {
         return $this->repository->get($request->user()->uuid);
     }
 
@@ -82,5 +118,43 @@ class UserController extends Controller
         ]);
 
         return $this->updateService->handle($request->user()->uuid, $data);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws InvalidCharactersException
+     * @throws SecretKeyTooShortException
+     */
+    function delete(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$this->hasher->check($request->input('password'), $user->password)) {
+            return new JsonResponse([
+                'data' => [
+                    'success' => false,
+                ],
+                'errors' => 'Password incorrect',
+            ]);
+        }
+
+        if ($user->use_totp) {
+            $secret = $this->encrypter->decrypt($user->totp_secret);
+            if (!$request->input('code') || !$this->google2FA->verifyKey($secret, $request->input('code'))) {
+                return new JsonResponse([
+                    'data' => [
+                        'success' => false,
+                    ],
+                    'errors' => 'Incorrect authorisation code',
+                ]);
+            }
+        }
+
+        return new JsonResponse([
+            'data' => [
+                'success' => $this->deletionService->handle($user->uuid)
+            ]
+        ]);
     }
 }
