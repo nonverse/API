@@ -96,12 +96,14 @@ class UserController extends Controller
 
         $request->session()->regenerate();
         Auth::loginUsingId($user->uuid, false);
-        return new JsonResponse([
+        $cookie = cookie('uuid', $user->uuid, 2628000);
+
+        return response()->json([
             'data' => [
                 'complete' => true,
                 'uuid' => $user->uuid,
             ]
-        ]);
+        ])->cookie($cookie);
     }
 
     public function get(Request $request)
