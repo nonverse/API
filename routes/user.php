@@ -19,6 +19,8 @@ Route::post('/', [\App\Http\Controllers\UserController::class, 'store']);
 Route::group(['middleware' => 'auth'], function () {
     // Update a user
     Route::post('store', [\App\Http\Controllers\UserController::class, 'update']);
+    // Delete a user's store
+    Route::delete('store', [\App\Http\Controllers\UserController::class, 'delete']);
 });
 
 // Auth or API token required
