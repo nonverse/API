@@ -121,6 +121,8 @@ class UserController extends Controller
     }
 
     /**
+     * Delete a user's account details from database
+     *
      * @param Request $request
      * @return JsonResponse
      * @throws IncompatibleWithGoogleAuthenticatorException
@@ -130,6 +132,8 @@ class UserController extends Controller
     function delete(Request $request): JsonResponse
     {
         $user = $request->user();
+
+        // Check if the user has provided a correct password before continuing
         if (!$this->hasher->check($request->input('password'), $user->password)) {
             return new JsonResponse([
                 'data' => [
@@ -139,6 +143,7 @@ class UserController extends Controller
             ]);
         }
 
+        // If the user has 2FA enabled, check if they have provided a correct authorisation code
         if ($user->use_totp) {
             $secret = $this->encrypter->decrypt($user->totp_secret);
             if (!$request->input('code') || !$this->google2FA->verifyKey($secret, $request->input('code'))) {
@@ -151,6 +156,7 @@ class UserController extends Controller
             }
         }
 
+        // Attempt to purge a user's account data
         return new JsonResponse([
             'data' => [
                 'success' => $this->deletionService->handle($user->uuid)
