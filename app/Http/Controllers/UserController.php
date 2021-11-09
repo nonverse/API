@@ -24,6 +24,11 @@ class UserController extends Controller
      */
     private $updateService;
 
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $repository;
+
     public function __construct(
         UserCreationService     $creationService,
         UserUpdateService       $updateService,
@@ -32,6 +37,7 @@ class UserController extends Controller
     {
         $this->creationService = $creationService;
         $this->updateService = $updateService;
+        $this->repository = $repository;
     }
 
     /**
@@ -61,6 +67,10 @@ class UserController extends Controller
                 'uuid' => $user->uuid,
             ]
         ]);
+    }
+
+    public function get(Request $request) {
+        return $this->repository->get($request->user()->uuid);
     }
 
     public function update(Request $request)
