@@ -22,7 +22,9 @@ Route::group(['middleware' => 'auth'], function () {
     // Delete a user's store
     Route::delete('store', [\App\Http\Controllers\UserController::class, 'delete']);
 
-   // Verify a user's email address
+    // (Re)send a user's email verification link
+    Route::post('/email', [\App\Http\Controllers\EmailVerificationController::class, 'resend'])->name('verification.send');
+    // Verify a user's email address
     Route::get('/email/{id}/{hash}', [\App\Http\Controllers\EmailVerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
 });
 
