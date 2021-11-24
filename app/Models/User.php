@@ -25,7 +25,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 

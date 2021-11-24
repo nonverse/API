@@ -21,6 +21,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('store', [\App\Http\Controllers\UserController::class, 'update']);
     // Delete a user's store
     Route::delete('store', [\App\Http\Controllers\UserController::class, 'delete']);
+
+   // Verify a user's email address
+    Route::get('/email/{id}/{hash}', [\App\Http\Controllers\EmailVerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
 });
 
 // Auth or API token required
