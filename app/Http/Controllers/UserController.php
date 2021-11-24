@@ -5,15 +5,13 @@ namespace App\Http\Controllers;
 use App\Contracts\Repository\UserRepositoryInterface;
 use App\Services\Users\UserDeletionService;
 use App\Services\Users\UserUpdateService;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Hashing\Hasher;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\Users\UserCreationService;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
@@ -92,11 +90,16 @@ class UserController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
+        // Create new user and persist to database
         $user = $this->creationService->handle($request->all());
 
+        // Login the user after registration
         $request->session()->regenerate();
         Auth::loginUsingId($user->uuid, false);
         $cookie = cookie('uuid', $user->uuid, 2628000);
+
+        // Dispatch user registration event upon successful registration
+        event(new Registered($user));
 
         return response()->json([
             'data' => [
