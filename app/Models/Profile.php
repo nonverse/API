@@ -2,8 +2,20 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+/**
+ * @property string $uuid
+ * @property string $mc_uuid
+ * @property string $mc_username
+ * @property integer $rank
+ * @property string $group
+ * @property object $teams
+ * @property Carbon $profile_verified_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 
 class Profile extends Model
 {
