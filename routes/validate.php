@@ -12,5 +12,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/validate-new-email', [\App\Http\Controllers\Validation\ValidationController::class, 'validateNewEmail']);
-Route::post('validate-new-user', [\App\Http\Controllers\Validation\ValidationController::class, 'validateNewUser']);
+Route::post('/validate-new-email', [\App\Http\Controllers\Validation\UserValidationController::class, 'validateNewEmail']);
+Route::post('/validate-new-user', [\App\Http\Controllers\Validation\UserValidationController::class, 'validateNewUser']);
