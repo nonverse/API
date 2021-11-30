@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Route;
 
 // Auth required
 Route::group(['middleware' => 'auth'], function () {
-    Route::post('/verify/send', [\App\Http\Controllers\Profile\ProfileVerificationController::class, 'sendVerification']);
+    // Send an OTP to verify a new user
+    Route::post('/verify', [\App\Http\Controllers\Profile\ProfileVerificationController::class, 'sendVerification']);
+
+
 });
 
 // Auth or API token required
