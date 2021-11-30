@@ -13,8 +13,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 // User validation
-Route::post('/validate-new-email', [\App\Http\Controllers\Validation\UserValidationController::class, 'validateNewEmail']);
-Route::post('/validate-new-user', [\App\Http\Controllers\Validation\UserValidationController::class, 'validateNewUser']);
+Route::group(['prefix' => 'user'], function() {
+    Route::post('/', [\App\Http\Controllers\Validation\UserValidationController::class, 'validateNewUser']);
+    Route::post('/email', [\App\Http\Controllers\Validation\UserValidationController::class, 'validateNewEmail']);
+});
 
 // Profile validation
-Route::post('/validate-new-profile', [\App\Http\Controllers\Validation\ProfileValidationController::class, 'validateUsername']);
+Route::group(['prefix' => 'profile'], function() {
+    Route::post('/', [\App\Http\Controllers\Validation\ProfileValidationController::class, 'validateUsername']);
+});
