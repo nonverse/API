@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Profile;
 
+use App\Contracts\Repository\UserProfileRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Services\Profile\ProfileCreationService;
 use App\Services\Profile\VerifyPasswordService;
@@ -13,6 +14,8 @@ use Illuminate\Http\Response;
 
 class ProfileController extends Controller
 {
+    private $repository;
+
     /**
      * @var VerifyPasswordService
      */
@@ -25,10 +28,12 @@ class ProfileController extends Controller
 
     public function __construct
     (
+        UserProfileRepositoryInterface $repository,
         VerifyPasswordService  $verifyPasswordService,
         ProfileCreationService $creationService
     )
     {
+        $this->repository = $repository;
         $this->verifyPasswordService = $verifyPasswordService;
         $this->creationService = $creationService;
     }
@@ -66,5 +71,9 @@ class ProfileController extends Controller
                 'mc_uuid' => $profile['mc_uuid']
             ]
         ]);
+    }
+
+    public function get(Request $request) {
+        return $this->repository->get($request->user()->uuid);
     }
 }
