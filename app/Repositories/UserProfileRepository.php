@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Contracts\Repository\UserProfileRepositoryInterface;
 use App\Models\Profile;
+use Illuminate\Support\Str;
 
 class UserProfileRepository implements UserProfileRepositoryInterface
 {
@@ -21,7 +22,12 @@ class UserProfileRepository implements UserProfileRepositoryInterface
      */
     public function get($uuid)
     {
-        // TODO: Implement get() method.
+        $profile = [];
+        if (Str::isUuid($uuid)) {
+            $profile = Profile::query()->find($uuid);
+        }
+
+        return $profile;
     }
 
     /**
