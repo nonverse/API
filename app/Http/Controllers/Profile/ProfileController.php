@@ -29,8 +29,8 @@ class ProfileController extends Controller
     public function __construct
     (
         UserProfileRepositoryInterface $repository,
-        VerifyPasswordService  $verifyPasswordService,
-        ProfileCreationService $creationService
+        VerifyPasswordService          $verifyPasswordService,
+        ProfileCreationService         $creationService
     )
     {
         $this->repository = $repository;
@@ -49,8 +49,14 @@ class ProfileController extends Controller
         // Validate request
         $request->validate([
             'mc_username' => 'required|unique:minecraft.profiles,mc_username',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'terms' => 'required'
         ]);
+
+        // Check if Terms and Conditions were accepted
+        if (!$request->input('terms')) {
+            return response('Terms must be accepted', 422);
+        }
 
         // Check that the requested Minecraft username is that same one that the OTP was sent to
         if ($request->input('mc_username') !== $request->session()->get('profile_verification_password')['mc_username']) {
@@ -73,7 +79,8 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function get(Request $request) {
+    public function get(Request $request)
+    {
         return $this->repository->get($request->user()->uuid);
     }
 }
