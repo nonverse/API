@@ -16,7 +16,8 @@ Route::group(['middleware' => 'auth'], function () {
     // Send an OTP to verify a new user
     Route::post('/verify', [\App\Http\Controllers\Profile\ProfileVerificationController::class, 'sendVerification']);
 
-
+    // Create a new user profile
+    Route::post('/', [\App\Http\Controllers\Profile\ProfileController::class, 'store']);
 });
 
 // Auth or API token required
