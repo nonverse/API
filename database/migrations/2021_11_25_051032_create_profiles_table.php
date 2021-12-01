@@ -16,8 +16,8 @@ class CreateProfilesTable extends Migration
         Schema::connection('minecraft')->create('profiles', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
-            $table->uuid('mc_uuid');
-            $table->string('mc_username');
+            $table->uuid('mc_uuid')->unique();
+            $table->string('mc_username')->unique();
             $table->integer('rank')->default(1);
             $table->string('group')->default('default');
             $table->text('teams')->nullable();
