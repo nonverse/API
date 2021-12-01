@@ -33,7 +33,7 @@ class SendPasswordService
 
         // Send a command to the panel to display the one time password in the user's in game chat
         $command = Http::withToken(env('PANEL_ADMIN_KEY'))->post('https://' . env('PANEL_APP') . '/api/client/servers/' . env('MINECRAFT_LOBBY_SERVER') . '/command', [
-            'command' => 'tellraw ' . $username . ' ["",{"text":"Your Nonverse one time password is ","bold":true,"color":"gold"},{"text":"' . $otp . '","underlined":true,"color":"blue"},"\n",{"text":"If you did not recently request a password, you can safely ignore this message","color":"red"}]'
+            'command' => 'tellraw ' . $username . ' ["",{"text":"Your Nonverse one time password is ","bold":true,"color":"gold"},{"text":"' . $otp . '","underlined":true,"color":"blue"},"\n",{"text":"This password will expire in 5 minutes","color":"red"},"\n",{"text":"If you did not recently request a password, you can safely ignore this message","bold":true,"color":"aqua","insertion":"If you did recently make a request to link your profile, you can safely ignore this message"}]'
         ]);
 
         // If the command fails, remove the session store and return a HTTP error 500
