@@ -41,6 +41,12 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate request
+        $request->validate([
+            'mc_username' => 'required|unique:minecraft.profiles,mc_username',
+            'password' => 'required|string'
+        ]);
+
         // Check that the requested Minecraft username is that same one that the OTP was sent to
         if ($request->input('mc_username') !== $request->session()->get('profile_verification_password')['mc_username']) {
             return response('Request data mismatch', 400);
