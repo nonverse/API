@@ -21,6 +21,7 @@ class CreateProfilesTable extends Migration
             $table->integer('rank')->default(1);
             $table->string('group')->default('default');
             $table->text('teams')->nullable();
+            $table->string('line');
             $table->timestamp('profile_verified_at')->nullable();
             $table->timestamps();
         });
