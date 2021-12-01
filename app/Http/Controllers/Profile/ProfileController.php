@@ -72,10 +72,6 @@ class ProfileController extends Controller
         // Create a new profile
         $profile = $this->creationService->handle($request->user()->uuid, $request->input('mc_username'));
 
-        Http::withToken(env('PANEL_ADMIN_KEY'))->post('https://' . env('PANEL_APP') . '/api/client/servers/' . env('MINECRAFT_LOBBY_SERVER') . '/command', [
-            'command' => 'tellraw @p ["",{"text":"Your profile has successfully been linked to a Nonverse account with email ","bold":true,"color":"green"},{"text":"'. $request->user()->email .'","color":"gold"}]'
-        ]);
-
         return new JsonResponse([
             'data' => [
                 'complete' => true,
