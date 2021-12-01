@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Validation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Exception;
 
 class ProfileValidationController
 {
@@ -49,8 +50,7 @@ class ProfileValidationController
         // If a valid user is found, return a JSON response containing the user's current Minecraft username and UUID
         return new JsonResponse([
             'data' => [
-                'mc_username' => $response['name'],
-                'mc_uuid' => $response['id']
+                'mc_username' => $response['name']
             ]
         ]);
     }
