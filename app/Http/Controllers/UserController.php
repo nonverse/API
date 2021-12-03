@@ -119,6 +119,37 @@ class UserController extends Controller
     }
 
     /**
+     * Update a user's password
+     *
+     * @param Request $request
+     * @return Application|ResponseFactory|JsonResponse|Response
+     */
+    public function updatePassword(Request $request)
+    {
+        // Validate request
+        $request->validate([
+            'password' => 'required',
+            'new_password' => 'required|confirmed'
+        ]);
+
+        // Check if provided password is valid
+        if (!Hash::check($request->input('password'), $request->user()->password)) {
+            return response('Invalid password', 401);
+        }
+
+        $this->updateService->handle($request->user()->uuid, [
+            'password' => $request->input('new_password')
+        ]);
+
+        return new JsonResponse([
+            'data' => [
+                'uuid' => $request->user()->uuid,
+                'success' => true
+            ]
+        ]);
+    }
+
+    /**
      * Delete a user's account details from database
      *
      * @param Request $request
