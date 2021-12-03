@@ -6,12 +6,16 @@ use App\Contracts\Repository\UserRepositoryInterface;
 use App\Services\Users\UserDeletionService;
 use App\Services\Users\UserUpdateService;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\Users\UserCreationService;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
@@ -112,17 +116,6 @@ class UserController extends Controller
     public function get(Request $request)
     {
         return $this->repository->get($request->user()->uuid);
-    }
-
-    public function update(Request $request)
-    {
-        $data = $request->except([
-            'use_totp',
-            'totp_secret',
-            'admin'
-        ]);
-
-        return $this->updateService->handle($request->user()->uuid, $data);
     }
 
     /**
