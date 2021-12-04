@@ -20,8 +20,8 @@ Route::get('/', function() {
 
 // Auth required
 Route::group(['middleware' => 'auth'], function () {
-    // Update a user
-    Route::post('store', [\App\Http\Controllers\UserController::class, 'update']);
+    // Update a user's password
+    Route::post('store/password', [\App\Http\Controllers\UserController::class, 'updatePassword']);
     // Delete a user's store
     Route::delete('store', [\App\Http\Controllers\UserController::class, 'delete']);
 
