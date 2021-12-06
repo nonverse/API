@@ -22,6 +22,7 @@ class UserDeletionService
         $this->repository = $repository;
     }
 
+    //TODO Include logic to check for profile and delete other user data
     public function handle($uuid): bool
     {
         return $this->repository->delete($uuid);

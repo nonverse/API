@@ -18,6 +18,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Create a new user profile
     Route::post('/', [\App\Http\Controllers\Profile\ProfileController::class, 'store']);
+    // Delete a user's profile
+    Route::delete('/', [\App\Http\Controllers\Profile\ProfileController::class, 'delete']);
 });
 
 // Auth or API token required

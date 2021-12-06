@@ -8,10 +8,11 @@ use App\Services\Profile\ProfileCreationService;
 use App\Services\Profile\VerifyPasswordService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -80,8 +81,43 @@ class ProfileController extends Controller
         ]);
     }
 
+    /**
+     * Get a user's profile
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function get(Request $request)
     {
         return $this->repository->get($request->user()->uuid);
+    }
+
+    /**
+     * Delete a user's profile
+     *
+     * @param Request $request
+     * @return Application|ResponseFactory|JsonResponse|Response
+     */
+    public function delete(Request $request)
+    {
+        $user = $request->user();
+        // Verify if the user has provided a valid password
+        if (!Hash::check($request->input('password'), $user->password)) {
+            return response('Invalid password', 401);
+        }
+
+        // Attempt to delete the user's profile
+        try {
+            $this->repository->delete($user->uuid);
+        } catch (ModelNotFoundException $e) {
+            return response('Something went wrong', 500);
+        }
+
+        return new JsonResponse([
+            'data' => [
+                'uuid' => $user->uuid,
+                'success' => true
+            ]
+        ]);
     }
 }
