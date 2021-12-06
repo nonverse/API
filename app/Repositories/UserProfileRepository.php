@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Contracts\Repository\UserProfileRepositoryInterface;
 use App\Models\Profile;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 
 class UserProfileRepository implements UserProfileRepositoryInterface
@@ -59,6 +60,14 @@ class UserProfileRepository implements UserProfileRepositoryInterface
      */
     public function delete($uuid): bool
     {
-        // TODO: Implement delete() method.
+        try {
+            $profile = Profile::query()->find($uuid)->firstOrFail();
+            $profile->delete();
+        } catch (QueryException $e) {
+            return false;
+        }
+
+
+        return true;
     }
 }
