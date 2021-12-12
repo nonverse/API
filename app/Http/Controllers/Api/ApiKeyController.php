@@ -37,18 +37,21 @@ class ApiKeyController extends Controller
             'terms' => 'required'
         ]);
 
+        // Fetch currently authenticated user
+        $user = $request->user();
+
         // Ensure that terms and conditions have been agreed to
         if (!$request->input('terms')) {
             return response('Terms must be accepted', 400);
         }
 
         // Issue a new token for the user with the requested name and permissions
-        $token = $this->creationService->handle($request->user()->uuid, $request->all());
+        $token = $this->creationService->handle($user->uuid, $request->all());
 
         return new JsonResponse([
             'data' => [
                 'success' => true,
-                'uuid' => $request->user()->uuid,
+                'uuid' => $user->uuid,
                 $token
             ]
         ]);
