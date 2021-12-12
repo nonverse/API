@@ -9,7 +9,7 @@ An API Key has been created for your account.
 {{$token}}
 @endcomponent
 
-This will expire 5 years from the date of creation and can be revoked at any time using the <a href="http://{{env('BASE_APP')}}/account/security" target="_blank" rel="noreferrer">account security page</a>
+This key will expire 5 years from the date of creation and can be revoked at any time using the <a href="http://{{env('BASE_APP')}}/account/security" target="_blank" rel="noreferrer">account security page</a>
 
 @component('mail::subcopy')
     If you did not recently create an API Key on your account, please revoke it <a href="http://{{env('BASE_APP')}}/account/security" target="_blank" rel="noreferrer">here</a> and change your password immediately
