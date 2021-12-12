@@ -36,7 +36,7 @@ class ApiKeyCreated extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable): array
@@ -51,12 +51,15 @@ class ApiKeyCreated extends Notification
      */
     public function toMail(): MailMessage
     {
-        return (new MailMessage)->markdown('mail.api.key-created', [
-            'name' => $this->user->name_first,
-            'key_name' =>  $this->token['key_name'],
-            'permissions' => $this->token['permission_count'],
-            'token' => $this->token['token_value'],
-            'id' => $this->token['token_id']
-        ]);
+        return (new MailMessage)
+            ->from('no-reply@api.nonverse.net', 'Nonverse API')
+            ->subject('API Key created')
+            ->markdown('mail.api.key-created', [
+                'name' => $this->user->name_first,
+                'key_name' => $this->token['key_name'],
+                'permissions' => $this->token['permission_count'],
+                'token' => $this->token['token_value'],
+                'id' => $this->token['token_id']
+            ]);
     }
 }
