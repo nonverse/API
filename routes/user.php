@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 // Create user (No auth required)
 Route::post('/', [\App\Http\Controllers\UserController::class, 'store']);
-Route::get('/', function() {
+Route::get('/', function () {
     return redirect('/user/store');
 });
 
@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Create a new API Key for a user
     Route::post('/key', [\App\Http\Controllers\Api\ApiKeyController::class, 'store']);
+    // Get a list of all API Keys for a user
+    Route::get('/keys', [\App\Http\Controllers\Api\ApiKeyController::class, 'get']);
 });
 
 // Auth or API token required

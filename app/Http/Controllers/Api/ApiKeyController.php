@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\Repository\ApiKeyRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Services\Api\KeyCreationService;
 use Illuminate\Contracts\Foundation\Application;
@@ -18,11 +19,18 @@ class ApiKeyController extends Controller
      */
     private $creationService;
 
+    /**
+     * @var ApiKeyRepositoryInterface
+     */
+    private $repository;
+
     public function __construct(
-        KeyCreationService $creationService
+        KeyCreationService        $creationService,
+        ApiKeyRepositoryInterface $repository
     )
     {
         $this->creationService = $creationService;
+        $this->repository = $repository;
     }
 
     /**
@@ -61,5 +69,10 @@ class ApiKeyController extends Controller
                 'uuid' => $user->uuid,
             ]
         ]);
+    }
+
+    public function get(Request $request): object
+    {
+        return $this->repository->get($request->user());
     }
 }
