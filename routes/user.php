@@ -29,6 +29,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/email', [\App\Http\Controllers\EmailVerificationController::class, 'resend'])->name('verification.send');
     // Verify a user's email address
     Route::get('/email/{id}/{hash}', [\App\Http\Controllers\EmailVerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
+
+    // Create a new API Key for a user
+    Route::post('/key', [\App\Http\Controllers\Api\ApiKeyController::class, 'store']);
 });
 
 // Auth or API token required
