@@ -30,6 +30,8 @@ class KeyCreationService
         $token = $user->createToken($data['key_name'], $data['permissions']);
 
         return array(
+            'key_name' => $data['key_name'],
+            'permission_count' => count($data['permissions']),
             'token_id' => explode('|', $token->plainTextToken)[0],
             'token_value' => explode('|', $token->plainTextToken)[1]
         );

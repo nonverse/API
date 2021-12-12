@@ -9,6 +9,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class ApiKeyController extends Controller
 {
@@ -40,6 +41,10 @@ class ApiKeyController extends Controller
         // Fetch currently authenticated user
         $user = $request->user();
 
+        if (!Hash::check($request->input('password'), $user->password)) {
+            return response('Invalid password', 401);
+        }
+
         // Ensure that terms and conditions have been agreed to
         if (!$request->input('terms')) {
             return response('Terms must be accepted', 400);
@@ -52,7 +57,7 @@ class ApiKeyController extends Controller
             'data' => [
                 'success' => true,
                 'uuid' => $user->uuid,
-                $token
+                'token' => $token
             ]
         ]);
     }
