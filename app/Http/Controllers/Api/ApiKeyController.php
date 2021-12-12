@@ -51,13 +51,14 @@ class ApiKeyController extends Controller
         }
 
         // Issue a new token for the user with the requested name and permissions
-        $token = $this->creationService->handle($user->uuid, $request->all());
+        if (!$this->creationService->handle($user->uuid, $request->all())) {
+            return response('Something went wrong', 500);
+        }
 
         return new JsonResponse([
             'data' => [
                 'success' => true,
                 'uuid' => $user->uuid,
-                'token' => $token
             ]
         ]);
     }
