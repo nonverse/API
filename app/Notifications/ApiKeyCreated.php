@@ -57,9 +57,7 @@ class ApiKeyCreated extends Notification
             ->markdown('mail.api.key-created', [
                 'name' => $this->user->name_first,
                 'key_name' => $this->token['key_name'],
-                'permissions' => $this->token['permission_count'],
-                'token' => $this->token['token_value'],
-                'id' => $this->token['token_id']
+                'token' => $this->token['token_value']
             ]);
     }
 }
