@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Create a new API Key for a user
     Route::post('/key', [\App\Http\Controllers\Api\ApiKeyController::class, 'store']);
+    // Delete a user's API Key
+    Route::delete('/key', [\App\Http\Controllers\Api\ApiKeyController::class, 'delete']);
     // Get a list of all API Keys for a user
     Route::get('/keys', [\App\Http\Controllers\Api\ApiKeyController::class, 'get']);
 });

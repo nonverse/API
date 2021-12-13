@@ -85,4 +85,22 @@ class ApiKeyController extends Controller
     {
         return $this->repository->get($request->user());
     }
+
+    /**
+     * @param Request $request
+     * @return Application|ResponseFactory|Response
+     */
+    public function delete(Request $request)
+    {
+
+        // Fetch authenticated user from session
+        $user = $request->user();
+
+        // Check if a valid password was provided before continuing with API Key deletion
+        if (!Hash::check($request->input('password'), $user->password)) {
+            return response('Invalid password', 401);
+        }
+
+        return $user->tokens()->where('id', $request->input('token_id'))->delete();
+    }
 }
