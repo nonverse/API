@@ -24,9 +24,9 @@ class KeyCreationService
     /**
      * @param $uuid
      * @param array $data
-     * @return bool
+     * @return array|false
      */
-    public function handle($uuid, array $data): bool
+    public function handle($uuid, array $data)
     {
         // Fetch the user by UUID
         $user = $this->repository->get($uuid);
@@ -38,12 +38,15 @@ class KeyCreationService
             // Attempt to send an email notification to the user with API Key details
             $user->notify(new ApiKeyCreated($user, array(
                 'key_name' => $data['key_name'],
-                'permission_count' => count($data['permissions']),
                 'token_id' => explode('|', $token->plainTextToken)[0],
                 'token_value' => explode('|', $token->plainTextToken)[1]
             )));
 
-            return true;
+            return array(
+                'key_name' => $data['key_name'],
+                'token_id' => explode('|', $token->plainTextToken)[0],
+                'permissions' => $data['permissions'],
+            );
         } catch (Exception $e) {
             // TODO Delete API Key from database if unable to send email
             return false;

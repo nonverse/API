@@ -58,19 +58,29 @@ class ApiKeyController extends Controller
             return response('Terms must be accepted', 400);
         }
 
-        // Issue a new token for the user with the requested name and permissions
-        if (!$this->creationService->handle($user->uuid, $request->all())) {
-            return response('Something went wrong', 500);
+        // Make sure that the user has not reached the limit of 5 API Keys per user
+        if ($request->user()->tokens()->count() >= 5) {
+            return response('Token limit reached', 400);
         }
+
+        // Issue a new token for the user with the requested name and permissions
+        $token = $this->creationService->handle($user->uuid, $request->all());
 
         return new JsonResponse([
             'data' => [
                 'success' => true,
                 'uuid' => $user->uuid,
+                'token' => $token
             ]
         ]);
     }
 
+    /**
+     * Get a list of a user's API Keys
+     *
+     * @param Request $request
+     * @return object
+     */
     public function get(Request $request): object
     {
         return $this->repository->get($request->user());
