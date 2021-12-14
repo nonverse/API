@@ -14,6 +14,6 @@ class ApiKeyRepository implements ApiKeyRepositoryInterface
      */
     public function get(User $user): object
     {
-        return $user->tokens()->get()->map->only(['id', 'name', 'abilities', 'last_used_at']);
+        return $user->tokens()->get()->map->only(['id', 'name', 'last_used_at']);
     }
 }

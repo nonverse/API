@@ -44,8 +44,7 @@ class KeyCreationService
 
             return array(
                 'key_name' => $data['key_name'],
-                'token_id' => explode('|', $token->plainTextToken)[0],
-                'permissions' => $data['permissions'],
+                'token_id' => explode('|', $token->plainTextToken)[0]
             );
         } catch (Exception $e) {
             // TODO Delete API Key from database if unable to send email
