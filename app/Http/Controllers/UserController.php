@@ -150,6 +150,31 @@ class UserController extends Controller
     }
 
     /**
+     * Update a user's details (NOT PASSWORD)
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function update(Request $request): JsonResponse
+    {
+        $request->validate([
+            'name_first' => 'required',
+            'name_last' => 'required',
+            'email' => 'required'
+        ]);
+
+        $user = $this->repository->update($request->user()->uuid, $request->only(['name_first', 'name_last', 'email', 'phone', 'dob']));
+
+        return new JsonResponse([
+            'data' => [
+                'uuid' => $request->user()->uuid,
+                'success' => true,
+                'user' => $user
+            ]
+        ]);
+    }
+
+    /**
      * Delete a user's account details from database
      *
      * @param Request $request
