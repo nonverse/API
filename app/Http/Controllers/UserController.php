@@ -163,7 +163,7 @@ class UserController extends Controller
             'email' => 'required'
         ]);
 
-        $user = $this->repository->update($request->user()->uuid, $request->only(['name_first', 'name_last', 'email', 'phone', 'dob']));
+        $user = $this->updateService->handle($request->user()->uuid, $request->only(['name_first', 'name_last', 'email', 'phone', 'dob']));
 
         return new JsonResponse([
             'data' => [

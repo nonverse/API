@@ -6,6 +6,7 @@ use App\Contracts\Repository\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use Mockery\Exception;
 
 class UserUpdateService
 {
@@ -26,14 +27,24 @@ class UserUpdateService
      *
      * @param $uuid
      * @param array $data
-     * @return User|bool
+     * @return User|false
      */
-    public function handle($uuid, array $data) {
-        if (Arr::has($data,'password')) {
-            $data['password'] = Hash::make($data['password']);
+    public function handle($uuid, array $data)
+    {
+        $user = $this->repository->get($uuid);
+        try {
+            $update = $this->repository->update($uuid, $data);
+            if ($update->email !== $user->email) {
+                $update = $this->repository->update($uuid, [
+                    'email_verified_at' => null
+                ]);
+                $update->sendEmailVerificationNotification();
+            }
+        } catch (Exception $e) {
+            return false;
         }
 
-        return $this->repository->update($uuid, $data);
+        return $update;
     }
 
 }
