@@ -20,6 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('name_first');
             $table->string('name_last');
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->date('dob')->nullable();
             $table->string('password');
             $table->boolean('admin')->default(0);
             $table->boolean('use_totp')->default(0);
