@@ -60,6 +60,10 @@ class ProfileController extends Controller
             return response('Terms must be accepted', 422);
         }
 
+        if (!$request->session()->get('profile_verification_password')) {
+            return response('Invalid password', 401);
+        }
+
         // Check that the requested Minecraft username is that same one that the OTP was sent to
         if ($request->input('mc_username') !== $request->session()->get('profile_verification_password')['mc_username']) {
             return response('Request data mismatch', 400);
@@ -72,6 +76,9 @@ class ProfileController extends Controller
 
         // Create a new profile
         $profile = $this->creationService->handle($request->user()->uuid, $request->input('mc_username'));
+
+        // Remove OTP session store
+        $request->session()->forget('profile_verification_password');
 
         return new JsonResponse([
             'data' => [
