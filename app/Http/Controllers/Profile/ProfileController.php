@@ -76,7 +76,7 @@ class ProfileController extends Controller
         return new JsonResponse([
             'data' => [
                 'complete' => true,
-                'mc_uuid' => $profile['mc_uuid']
+                'profile' => $profile
             ]
         ]);
     }

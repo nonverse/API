@@ -44,7 +44,7 @@ class UserProfileRepository implements UserProfileRepositoryInterface
 
         $query = $profile->save();
 
-        return $profile;
+        return $this->get($uuid);
     }
 
     /**
