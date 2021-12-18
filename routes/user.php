@@ -21,9 +21,9 @@ Route::get('/', function () {
 // Auth required
 Route::group(['middleware' => 'auth'], function () {
     // Update a user's details
-    Route::post('store', [\App\Http\Controllers\User\UserController::class, 'update']);
+    Route::post('store', [\App\Http\Controllers\User\UserUpdateController::class, 'update']);
     // Update a user's password
-    Route::post('store/password', [\App\Http\Controllers\User\UserController::class, 'updatePassword']);
+    Route::post('store/password', [\App\Http\Controllers\User\UserUpdateController::class, 'updatePassword']);
     // Delete a user's store
     Route::delete('store', [\App\Http\Controllers\User\UserController::class, 'delete']);
 
