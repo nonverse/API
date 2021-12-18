@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Contracts\Repository\UserRepositoryInterface;
+use App\Http\Controllers\Controller;
 use App\Services\Users\UserDeletionService;
 use App\Services\Users\UserUpdateService;
 use Illuminate\Auth\Events\Registered;

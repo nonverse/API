@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Create user (No auth required)
-Route::post('/', [\App\Http\Controllers\UserController::class, 'store']);
+Route::post('/', [\App\Http\Controllers\User\UserController::class, 'store']);
 Route::get('/', function () {
     return redirect('/user/store');
 });
@@ -21,16 +21,16 @@ Route::get('/', function () {
 // Auth required
 Route::group(['middleware' => 'auth'], function () {
     // Update a user's details
-    Route::post('store', [\App\Http\Controllers\UserController::class, 'update']);
+    Route::post('store', [\App\Http\Controllers\User\UserController::class, 'update']);
     // Update a user's password
-    Route::post('store/password', [\App\Http\Controllers\UserController::class, 'updatePassword']);
+    Route::post('store/password', [\App\Http\Controllers\User\UserController::class, 'updatePassword']);
     // Delete a user's store
-    Route::delete('store', [\App\Http\Controllers\UserController::class, 'delete']);
+    Route::delete('store', [\App\Http\Controllers\User\UserController::class, 'delete']);
 
     // (Re)send a user's email verification link
-    Route::post('/email', [\App\Http\Controllers\EmailVerificationController::class, 'resend'])->name('verification.send');
+    Route::post('/email', [\App\Http\Controllers\User\EmailVerificationController::class, 'resend'])->name('verification.send');
     // Verify a user's email address
-    Route::get('/email/{id}/{hash}', [\App\Http\Controllers\EmailVerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
+    Route::get('/email/{id}/{hash}', [\App\Http\Controllers\User\EmailVerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
 
     // Create a new API Key for a user
     Route::post('/key', [\App\Http\Controllers\Api\ApiKeyController::class, 'store']);
@@ -43,5 +43,5 @@ Route::group(['middleware' => 'auth'], function () {
 // Auth or API token required
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Get a user's details
-    Route::get('store', [\App\Http\Controllers\UserController::class, 'get'])->middleware('ability:store:view');
+    Route::get('store', [\App\Http\Controllers\User\UserController::class, 'get'])->middleware('ability:store:view');
 });
