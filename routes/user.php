@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Create user (No auth required)
-Route::post('/', [\App\Http\Controllers\User\UserController::class, 'store']);
+Route::post('/', [\App\Http\Controllers\User\UserBaseController::class, 'store']);
 Route::get('/', function () {
     return redirect('/user/store');
 });
@@ -25,7 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Update a user's password
     Route::post('store/password', [\App\Http\Controllers\User\UserUpdateController::class, 'updatePassword']);
     // Delete a user's store
-    Route::delete('store', [\App\Http\Controllers\User\UserController::class, 'delete']);
+    Route::delete('store', [\App\Http\Controllers\User\UserBaseController::class, 'delete']);
 
     // (Re)send a user's email verification link
     Route::post('/email', [\App\Http\Controllers\User\EmailVerificationController::class, 'resend'])->name('verification.send');
@@ -43,5 +43,5 @@ Route::group(['middleware' => 'auth'], function () {
 // Auth or API token required
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Get a user's details
-    Route::get('store', [\App\Http\Controllers\User\UserController::class, 'get'])->middleware('ability:store:view');
+    Route::get('store', [\App\Http\Controllers\User\UserBaseController::class, 'get'])->middleware('ability:store:view');
 });

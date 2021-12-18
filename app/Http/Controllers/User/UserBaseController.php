@@ -22,7 +22,7 @@ use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FA\Google2FA;
 
-class UserController extends Controller
+class UserBaseController extends Controller
 {
     /**
      * @var UserCreationService
@@ -30,52 +30,17 @@ class UserController extends Controller
     private $creationService;
 
     /**
-     * @var UserUpdateService
-     */
-    private $updateService;
-
-    /**
-     * @var UserDeletionService
-     */
-    private $deletionService;
-
-    /**
      * @var UserRepositoryInterface
      */
     private $repository;
 
-    /**
-     * @var Hasher
-     */
-    private $hasher;
-
-    /**
-     * @var Encrypter
-     */
-    private $encrypter;
-
-    /**
-     * @var Google2FA
-     */
-    private $google2FA;
-
     public function __construct(
         UserCreationService     $creationService,
-        UserUpdateService       $updateService,
-        UserDeletionService     $deletionService,
-        UserRepositoryInterface $repository,
-        Hasher                  $hasher,
-        Encrypter               $encrypter,
-        Google2FA               $google2FA
+        UserRepositoryInterface $repository
     )
     {
         $this->creationService = $creationService;
-        $this->updateService = $updateService;
-        $this->deletionService = $deletionService;
         $this->repository = $repository;
-        $this->hasher = $hasher;
-        $this->encrypter = $encrypter;
-        $this->google2FA = $google2FA;
     }
 
     /**
@@ -117,49 +82,5 @@ class UserController extends Controller
     public function get(Request $request)
     {
         return $this->repository->get($request->user()->uuid);
-    }
-
-    /**
-     * Delete a user's account details from database
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws IncompatibleWithGoogleAuthenticatorException
-     * @throws InvalidCharactersException
-     * @throws SecretKeyTooShortException
-     */
-    function delete(Request $request): JsonResponse
-    {
-        $user = $request->user();
-
-        // Check if the user has provided a correct password before continuing
-        if (!$this->hasher->check($request->input('password'), $user->password)) {
-            return new JsonResponse([
-                'data' => [
-                    'success' => false,
-                ],
-                'errors' => 'Password incorrect',
-            ]);
-        }
-
-        // If the user has 2FA enabled, check if they have provided a correct authorisation code
-        if ($user->use_totp) {
-            $secret = $this->encrypter->decrypt($user->totp_secret);
-            if (!$request->input('code') || !$this->google2FA->verifyKey($secret, $request->input('code'))) {
-                return new JsonResponse([
-                    'data' => [
-                        'success' => false,
-                    ],
-                    'errors' => 'Incorrect authorisation code',
-                ]);
-            }
-        }
-
-        // Attempt to purge a user's account data
-        return new JsonResponse([
-            'data' => [
-                'success' => $this->deletionService->handle($user->uuid)
-            ]
-        ]);
     }
 }
