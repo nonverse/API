@@ -64,14 +64,14 @@ class ProfileController extends Controller
             return response('Invalid password', 401);
         }
 
+        // Check if a valid OTP was provided
+        if (!$this->verifyPasswordService->handle($request, $request->input('password'), true)) {
+            return response('Invalid password', 401);
+        }
+
         // Check that the requested Minecraft username is that same one that the OTP was sent to
         if ($request->input('mc_username') !== $request->session()->get('one_time_password')['mc_username']) {
             return response('Request data mismatch', 400);
-        }
-
-        // Check if a valid OTP was provided
-        if (!$this->verifyPasswordService->handle($request, $request->input('password'))) {
-            return response('Invalid password', 401);
         }
 
         // Create a new profile

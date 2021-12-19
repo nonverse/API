@@ -143,7 +143,7 @@ class UserDeletionController extends \App\Http\Controllers\Controller
         }
 
         // Validate one time password
-        if (!$this->verifyPasswordService->handle($request, $request->input('otp'))) {
+        if (!$this->verifyPasswordService->handle($request, $request->input('otp'), false)) {
             return response('Invalid one time password', 401);
         }
 
