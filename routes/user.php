@@ -24,8 +24,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('store', [\App\Http\Controllers\User\UserUpdateController::class, 'update']);
     // Update a user's password
     Route::post('store/password', [\App\Http\Controllers\User\UserUpdateController::class, 'updatePassword']);
-    // Delete a user's store
-    Route::delete('store', [\App\Http\Controllers\User\UserBaseController::class, 'delete']);
+    // Initialise deletion of a user's account
+    Route::post('store/delete', [\App\Http\Controllers\User\UserDeletionController::class, 'initialise']);
+    // Delete a user's account
+    Route::delete('store', [\App\Http\Controllers\User\UserDeletionController::class, 'delete']);
 
     // (Re)send a user's email verification link
     Route::post('/email', [\App\Http\Controllers\User\EmailVerificationController::class, 'resend'])->name('verification.send');
