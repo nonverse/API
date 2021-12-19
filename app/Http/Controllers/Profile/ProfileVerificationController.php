@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Services\Profile\SendPasswordService;
+use App\Services\Auth\SendPasswordService;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -54,7 +54,7 @@ class ProfileVerificationController extends Controller
             return response('Invalid Minecraft username', 422);
         }
 
-        if (!$this->sendPasswordService->handle($request, $response['name'])) {
+        if (!$this->sendPasswordService->chat($request, $response['name'])) {
             return response('Something went wrong', 500);
         }
 

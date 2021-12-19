@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Profile;
+namespace App\Services\Auth;
 
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
@@ -22,7 +22,7 @@ class VerifyPasswordService
      */
     public function handle(Request $request, $password): bool
     {
-        $details = $request->session()->get('profile_verification_password');
+        $details = $request->session()->get('one_time_password');
         if (!$this->validateSessionDetails($details)) {
             return false;
         }
@@ -44,7 +44,6 @@ class VerifyPasswordService
     {
         $validator = Validator::make($details, [
             'uuid' => 'required|string',
-            'mc_username' => 'required',
             'password' => 'required|string',
             'password_expiry' => 'required'
         ]);

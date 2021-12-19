@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Services\Profile;
+namespace App\Services\Auth;
 
+use App\Models\User;
+use App\Notifications\OneTimePassword;
 use Carbon\CarbonImmutable;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -18,13 +21,13 @@ class SendPasswordService
      * @param $username
      * @return bool
      */
-    public function handle(Request $request, $username): bool
+    public function chat(Request $request, $username): bool
     {
         // Generate a random 12 character One Time Password
         $otp = Str::random(12);
 
         // Create a session store containing a password hash and expiry
-        $request->session()->put('profile_verification_password', [
+        $request->session()->put('one_time_password', [
             'uuid' => $request->user()->uuid,
             'mc_username' => $username,
             'password' => Hash::make($otp),
@@ -38,7 +41,40 @@ class SendPasswordService
 
         // If the command fails, remove the session store and return a HTTP error 500
         if ($command->status() !== 204) {
-            $request->session()->forget('profile_verification_password');
+            $request->session()->forget('one_time_password');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Send a One Time Password to a user's in email and store
+     * Hash and expiry in encrypted session store
+     *
+     * @param Request $request
+     * @return bool
+     */
+    public function email(Request $request): bool
+    {
+        $otp = Str::random(12);
+        $user = $request->user();
+
+        // Create a session store containing a password hash and expiry
+        $request->session()->put('one_time_password', [
+            'uuid' => $user->uuid,
+            'password' => Hash::make($otp),
+            'password_expiry' => CarbonImmutable::now()->addMinutes(5)
+        ]);
+
+        try {
+            $user->notify(new OneTimePassword($user, [
+                'value' => $otp,
+                'request_time' => CarbonImmutable::now(),
+                'request_ip' => $_SERVER['REMOTE_ADDR']
+            ]));
+        } catch (Exception $e) {
+            $request->session()->forget('one_time_password');
             return false;
         }
 

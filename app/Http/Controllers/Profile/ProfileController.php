@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Profile;
 use App\Contracts\Repository\UserProfileRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Services\Profile\ProfileCreationService;
-use App\Services\Profile\VerifyPasswordService;
+use App\Services\Auth\VerifyPasswordService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
