@@ -19,9 +19,10 @@ class SendPasswordService
      *
      * @param Request $request
      * @param $username
+     * @param $identifier
      * @return bool
      */
-    public function chat(Request $request, $username): bool
+    public function chat(Request $request, $username, $identifier): bool
     {
         // Generate a random 12 character One Time Password
         $otp = Str::random(12);
@@ -31,6 +32,7 @@ class SendPasswordService
             'uuid' => $request->user()->uuid,
             'mc_username' => $username,
             'password' => Hash::make($otp),
+            'password_identifier' => $identifier,
             'password_expiry' => CarbonImmutable::now()->addMinutes(5)
         ]);
 
@@ -53,9 +55,10 @@ class SendPasswordService
      * Hash and expiry in encrypted session store
      *
      * @param Request $request
+     * @param $identifier
      * @return bool
      */
-    public function email(Request $request): bool
+    public function email(Request $request, $identifier): bool
     {
         $otp = Str::random(12);
         $user = $request->user();
@@ -64,6 +67,7 @@ class SendPasswordService
         $request->session()->put('one_time_password', [
             'uuid' => $user->uuid,
             'password' => Hash::make($otp),
+            'password_identifier' => $identifier,
             'password_expiry' => CarbonImmutable::now()->addMinutes(5)
         ]);
 

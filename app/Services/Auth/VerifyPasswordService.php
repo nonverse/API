@@ -18,13 +18,13 @@ class VerifyPasswordService
      *
      * @param Request $request
      * @param $password
-     * @param bool $chat
+     * @param $identifier
      * @return bool
      */
-    public function handle(Request $request, $password, bool $chat): bool
+    public function handle(Request $request, $password, $identifier): bool
     {
         $details = $request->session()->get('one_time_password');
-        if (!$this->validateSessionDetails($details, $chat)) {
+        if (!$this->validateSessionDetails($details, $identifier)) {
             return false;
         }
 
@@ -39,31 +39,23 @@ class VerifyPasswordService
      * Verify that the session details are valid
      *
      * @param array $details
-     * @param bool $chat
+     * @param $identifier
      * @return bool
      */
-    protected function validateSessionDetails(array $details, bool $chat): bool
+    protected function validateSessionDetails(array $details, $identifier): bool
     {
-        if ($chat) {
-            $validator = Validator::make($details, [
-                'uuid' => 'required|string',
-                'mc_username' => 'required',
-                'password' => 'required|string',
-                'password_expiry' => 'required'
-            ]);
-        } else {
-            $validator = Validator::make($details, [
-                'uuid' => 'required|string',
-                'password' => 'required|string',
-                'password_expiry' => 'required',
-            ]);
-        }
+        $validator = Validator::make($details, [
+            'uuid' => 'required|string',
+            'password' => 'required|string',
+            'password_identifier' => 'required|string',
+            'password_expiry' => 'required',
+        ]);
 
-        if (!$chat && array_key_exists('mc_username', $details)) {
+        if ($validator->fails()) {
             return false;
         }
 
-        if ($validator->fails()) {
+        if ($identifier !== $details['password_identifier']) {
             return false;
         }
 
