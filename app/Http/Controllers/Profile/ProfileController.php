@@ -65,7 +65,7 @@ class ProfileController extends Controller
         }
 
         // Check if a valid OTP was provided
-        if (!$this->verifyPasswordService->handle($request, $request->input('password'), true)) {
+        if (!$this->verifyPasswordService->handle($request, $request->input('password'), 'profile_verification_password')) {
             return response('Invalid password', 401);
         }
 

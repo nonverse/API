@@ -100,7 +100,7 @@ class UserDeletionController extends \App\Http\Controllers\Controller
         ]);
 
         // Attempt to send an email containing OTP
-        if (!$this->sendPasswordService->email($request)) {
+        if (!$this->sendPasswordService->email($request, 'user_termination_password')) {
             $request->session()->forget('user_termination_token');
             return response('Unable to send email', 500);
         }
@@ -143,7 +143,7 @@ class UserDeletionController extends \App\Http\Controllers\Controller
         }
 
         // Validate one time password
-        if (!$this->verifyPasswordService->handle($request, $request->input('otp'), false)) {
+        if (!$this->verifyPasswordService->handle($request, $request->input('otp'), 'user_termination_password')) {
             return response('Invalid one time password', 401);
         }
 

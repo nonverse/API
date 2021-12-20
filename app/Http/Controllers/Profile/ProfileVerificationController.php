@@ -54,7 +54,7 @@ class ProfileVerificationController extends Controller
             return response('Invalid Minecraft username', 422);
         }
 
-        if (!$this->sendPasswordService->chat($request, $response['name'])) {
+        if (!$this->sendPasswordService->chat($request, $response['name'], 'profile_verification_password')) {
             return response('Something went wrong', 500);
         }
 
