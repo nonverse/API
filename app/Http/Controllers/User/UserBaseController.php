@@ -65,7 +65,7 @@ class UserBaseController extends Controller
 
         // Login the user after registration
         $request->session()->regenerate();
-        Auth::loginUsingId($user->uuid, false);
+        Auth::loginUsingId($user->uuid, false); //TODO Post registration login does not seem to be working
         $cookie = cookie('uuid', $user->uuid, 2628000);
 
         // Dispatch user registration event upon successful registration
