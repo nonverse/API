@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserUpdateController extends Controller
 {
@@ -61,11 +63,27 @@ class UserUpdateController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
-        $request->validate([
+//        $request->validate([
+//            'name_first' => 'required',
+//            'name_last' => 'required',
+//            'email' => 'required|unique:users,email'
+//        ]);
+
+        $validator = Validator::make($request->all(), [
             'name_first' => 'required',
             'name_last' => 'required',
-            'email' => 'required'
+            'email' => [
+                'required',
+                Rule::unique('users', 'email')->ignore($request->user()->uuid, 'uuid')
+            ]
         ]);
+
+        if ($validator->fails()) {
+            return new JsonResponse([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
 
         $user = $this->updateService->handle($request->user()->uuid, $request->only(['name_first', 'name_last', 'email', 'phone', 'dob']));
 
