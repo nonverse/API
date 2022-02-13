@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Contracts\Repository\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
@@ -68,12 +69,12 @@ class UserRepository implements UserRepositoryInterface
      * @param $uuid
      * @param array $data
      *
-     * @return User|bool
+     * @return Model|bool
      */
     public function update($uuid, array $data)
     {
         try {
-            $user = User::query()->find($uuid)->firstOrFail();
+            $user = User::query()->findOrFail($uuid);
         } catch (ModelNotFoundException $e) {
             return false;
         }
