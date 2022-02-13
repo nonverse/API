@@ -27,10 +27,13 @@ class UserUpdateService
      *
      * @param $uuid
      * @param array $data
-     * @return User|false
+     * @return User|bool
      */
     public function handle($uuid, array $data)
     {
+        if (Arr::has($data, 'password')) {
+            $data['password'] = Hash::make($data['password']);
+        }
         $user = $this->repository->get($uuid);
         try {
             $update = $this->repository->update($uuid, $data);
