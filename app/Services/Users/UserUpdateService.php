@@ -6,7 +6,7 @@ use App\Contracts\Repository\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
-use Mockery\Exception;
+use Exception;
 
 class UserUpdateService
 {
