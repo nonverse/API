@@ -100,7 +100,7 @@ class UserRepository implements UserRepositoryInterface
     public function delete($uuid): bool
     {
         try {
-            $user = User::query()->find($uuid)->firstOrFail();
+            $user = User::query()->findOrFail($uuid);
             $user->delete();
         } catch (QueryException $e) {
             return false;

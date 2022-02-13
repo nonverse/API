@@ -61,7 +61,7 @@ class UserProfileRepository implements UserProfileRepositoryInterface
     public function delete($uuid): bool
     {
         try {
-            $profile = Profile::query()->find($uuid)->firstOrFail();
+            $profile = Profile::query()->findOrFail($uuid);
             $profile->delete();
         } catch (QueryException $e) {
             return false;
