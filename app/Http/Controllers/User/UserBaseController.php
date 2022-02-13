@@ -60,6 +60,17 @@ class UserBaseController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
+        // Check if a user's password contains any part of their name(s)
+        $password = $request->input('password');
+        if (str_contains($password, $request->input('name_first')) || str_contains($password, $request->input('name_last'))) {
+
+            return new JsonResponse([
+                'errors' => [
+                    'password' => 'Password cannot contain your name'
+                ]
+            ], 422);
+        }
+
         // Create new user and persist to database
         $user = $this->creationService->handle($request->all());
 
