@@ -35,12 +35,23 @@ class UserUpdateController extends Controller
         // Validate request
         $request->validate([
             'password' => 'required',
-            'new_password' => 'required|confirmed'
+            'new_password' => 'required|confirmed|min:8'
         ]);
 
         // Check if provided password is valid
         if (!Hash::check($request->input('password'), $request->user()->password)) {
             return response('Invalid password', 401);
+        }
+
+        // Check if a user's password contains any part of their name(s)
+        $password = $request->input('new_password');
+        $user = $request->user();
+        if (str_contains($password, $user->name_first) || str_contains($password, $user->name_last)) {
+            return new JsonResponse([
+                'errors' => [
+                    'new_password' => 'Password cannot contain your name'
+                ]
+            ], 422);
         }
 
         $this->updateService->handle($request->user()->uuid, [
