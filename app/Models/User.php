@@ -76,6 +76,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
         'totp_secret',
+        'api_encryption'
     ];
 
     /**
