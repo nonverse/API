@@ -18,6 +18,11 @@ Route::get('/', function () {
     return redirect('/user/store');
 });
 
+//Login
+Route::get('/login', function () {
+    return redirect('http://' . env('AUTH_SERVER') . '/login?host=' . $_SERVER['HTTP_HOST']);
+})->name('login');
+
 // Auth required
 Route::group(['middleware' => 'auth'], function () {
     // Update a user's details
