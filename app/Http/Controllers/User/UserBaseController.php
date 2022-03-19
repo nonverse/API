@@ -6,6 +6,8 @@ use App\Contracts\Repository\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Services\Users\UserDeletionService;
 use App\Services\Users\UserUpdateService;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Hashing\Hasher;
@@ -17,6 +19,7 @@ use App\Services\Users\UserCreationService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
@@ -58,7 +61,43 @@ class UserBaseController extends Controller
             'name_first' => 'required',
             'name_last' => 'required',
             'password' => 'required|min:8|confirmed',
+            'activation_token' => 'required'
         ]);
+
+        /*
+         * Check if a valid activation token is present in the session
+         */
+        $details = $request->session()->get('activation_token');
+        if (!$this->validateSessionDetails($details)) {
+            return new JsonResponse([
+                'errors' => [
+                    'token' => 'Activation token has expired'
+                ]
+            ], 401);
+        }
+
+        /*
+         * Check if the provided activation token is valid
+         */
+        if ($request->input('activation_token') !== $details['token_value']) {
+            return new JsonResponse([
+                'errors' => [
+                    'token' => 'Invalid activation token'
+                ]
+            ], 401);
+        }
+
+        /*
+         * Check if the email that is requesting to be registered
+         * is the same as the one the activation token was issued for
+         */
+        if ($request->input('email') !== $details['email']) {
+            return new JsonResponse([
+                'errors' => [
+                    'email' => 'Request data mismatch'
+                ]
+            ], 400);
+        }
 
         // Check if a user's password contains any part of their name(s)
         $password = $request->input('password');
@@ -90,8 +129,43 @@ class UserBaseController extends Controller
         ])->cookie($cookie);
     }
 
+    /**
+     * Get a user from database
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function get(Request $request)
     {
         return $this->repository->get($request->user()->uuid);
+    }
+
+    /**
+     * Verify that the session details are valid
+     *
+     * @param array $details
+     * @return bool
+     */
+    protected function validateSessionDetails(array $details): bool
+    {
+        $validator = Validator::make($details, [
+            'email' => 'required|email',
+            'token_value' => 'required|string',
+            'token_expiry' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return false;
+        }
+
+        if (!$details['token_expiry'] instanceof CarbonInterface) {
+            return false;
+        }
+
+        if ($details['token_expiry']->isBefore(CarbonImmutable::now())) {
+            return false;
+        }
+
+        return true;
     }
 }
