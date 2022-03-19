@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Activate a user's account (No auth required)
+Route::post('/activate', [\App\Http\Controllers\InviteController::class, 'activate']);
+
 // Create user (No auth required)
 Route::post('/', [\App\Http\Controllers\User\UserBaseController::class, 'store']);
 Route::get('/', function () {
