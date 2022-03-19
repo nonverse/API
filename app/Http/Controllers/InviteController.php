@@ -40,7 +40,7 @@ class InviteController extends Controller
     public function create(Request $request): JsonResponse
     {
         $request->validate([
-            'email' => 'required|email|unique:users,email'
+            'email' => 'required|email|unique:invites,email'
         ]);
 
         $invite = $this->creationService->handle($request, $request->input('email'));
