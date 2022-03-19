@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Contracts\Repository\InviteRepositoryInterface;
 use App\Services\Base\InviteActivationService;
 use App\Services\Base\InviteCreationService;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class InviteController extends Controller
 {
@@ -64,7 +66,7 @@ class InviteController extends Controller
             'activation_key' => 'required'
         ]);
 
-        $activation = $this->activationService->handle($request->input('email'), $request->input('activation_key'));
+        $activation = $this->activationService->handle($request, $request->input('email'), $request->input('activation_key'));
 
         if (!$activation['success']) {
             return new JsonResponse([
@@ -76,7 +78,8 @@ class InviteController extends Controller
 
         return new JsonResponse([
             'data' => [
-                'success' => true
+                'success' => true,
+                'activation_token' => $activation['token']
             ]
         ]);
     }

@@ -24,27 +24,26 @@ class InviteActivationService
      */
     private $hasher;
 
-    /**
-     * @var UserCreationService
-     */
-    private $userCreationService;
-
-
     public function construct(
         InviteRepositoryInterface $repository,
-        UserCreationService       $userCreationService,
         Hasher                    $hasher
     )
     {
         $this->repository = $repository;
-        $this->userCreationService = $userCreationService;
         $this->hasher = $hasher;
     }
 
-    public function handle($email, $key)
+    /**
+     * Issue activation token
+     *
+     * @param Request $request
+     * @param $email
+     * @param $key
+     * @return array
+     */
+    public function handle(Request $request, $email, $key): array
     {
         $invite = $this->repository->get($email);
-        $uuid = Str::uuid();
 
         if (CarbonImmutable::now()->isAfter($invite->key_expiry)) {
             return [
@@ -60,24 +59,17 @@ class InviteActivationService
             ];
         }
 
-        try {
-            $this->userCreationService->handle([
-                'email' => $email,
-                'uuid' => $uuid
-            ]);
+        $token = Str::random(64);
 
-            $this->repository->update($email, [
-                'claimed_by' => $uuid
-            ]);
+        $request->session()->put('activation_token', [
+            'email' => $request->input('email'),
+            'token_value' => $token,
+            'token_expiry' => CarbonImmutable::now()->addMinutes(15)
+        ]);
 
-            return [
-                'success' => true,
-            ];
-        } catch (Exception $e) {
-            return [
-                'success' => false,
-                'error' => 'Something went wrong'
-            ];
-        }
+        return [
+            'success' => true,
+            'token' => $token
+        ];
     }
 }
