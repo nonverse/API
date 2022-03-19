@@ -24,7 +24,7 @@ class InviteActivationService
      */
     private $hasher;
 
-    public function construct(
+    public function __construct(
         InviteRepositoryInterface $repository,
         Hasher                    $hasher
     )
@@ -44,6 +44,20 @@ class InviteActivationService
     public function handle(Request $request, $email, $key): array
     {
         $invite = $this->repository->get($email);
+
+        if (!$invite) {
+            return [
+                'success' => false,
+                'error' => 'No invitation found'
+            ];
+        }
+
+        if ($invite->claimed_by) {
+            return [
+                'success' => false,
+                'error' => 'Activation key has been used'
+            ];
+        }
 
         if (CarbonImmutable::now()->isAfter($invite->key_expiry)) {
             return [
