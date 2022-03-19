@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Contracts\Repository\InviteRepositoryInterface;
 use App\Contracts\Repository\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Services\Users\UserDeletionService;
@@ -37,13 +38,20 @@ class UserBaseController extends Controller
      */
     private $repository;
 
+    /**
+     * @var InviteRepositoryInterface
+     */
+    private $inviteRepository;
+
     public function __construct(
         UserCreationService     $creationService,
-        UserRepositoryInterface $repository
+        UserRepositoryInterface $repository,
+        InviteRepositoryInterface $inviteRepository
     )
     {
         $this->creationService = $creationService;
         $this->repository = $repository;
+        $this->inviteRepository = $inviteRepository;
     }
 
     /**
@@ -112,6 +120,9 @@ class UserBaseController extends Controller
 
         // Create new user and persist to database
         $user = $this->creationService->handle($request->all());
+        $this->inviteRepository->update($request->input('email'), [
+            'claimed_by' => $user->uuid
+        ]);
 
         // Login the user after registration
         $request->session()->regenerate();
