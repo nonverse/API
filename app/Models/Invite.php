@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-
 class Invite extends Model
 {
     use HasFactory;
@@ -40,4 +39,8 @@ class Invite extends Model
      * @var string
      */
     protected $keyType = 'string';
+
+    protected $fillable = [
+        'claimed_by'
+    ];
 }
