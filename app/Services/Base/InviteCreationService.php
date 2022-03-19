@@ -23,7 +23,7 @@ class InviteCreationService
      */
     private $hasher;
 
-    public function construct(
+    public function __construct(
         InviteRepositoryInterface $repository,
         Hasher                    $hasher
     )
@@ -36,7 +36,7 @@ class InviteCreationService
     {
         $key = implode('-', str_split(strtoupper(Str::random(16)), 4));
 
-        $this->repository->create([
+        $invite = $this->repository->create([
             'email' => $email,
             'invite_key' => $this->hasher->make($key),
             'invited_by' => $request->user()->uuid,
@@ -50,7 +50,7 @@ class InviteCreationService
                     'email' => $email
                 ]));
 
-            return true;
+            return $invite;
         } catch (Exception $e) {
             $this->repository->delete($email);
             return false;
