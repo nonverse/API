@@ -12,5 +12,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Invite a new user
-Route::get('/invite-new-user', [\App\Http\Controllers\InviteController::class, 'create']);
+/**
+ * Invitation Route
+ *
+ * Endpoint: /admin/invites
+ */
+
+Route::group(['prefix' => 'invites'], function() {
+    // Get all invites
+    Route::get('/', [\App\Http\Controllers\InviteController::class, 'all']);
+    // Create new invite(s)
+    Route::get('/create', [\App\Http\Controllers\InviteController::class, 'create']);
+});
+
+//
