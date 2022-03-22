@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $email
+ * @property string $name
  * @property string $invite_key
  * @property string $invited_by
  * @property string $claimed_by

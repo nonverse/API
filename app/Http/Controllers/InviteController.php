@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Contracts\Repository\InviteRepositoryInterface;
 use App\Services\Base\InviteActivationService;
 use App\Services\Base\InviteCreationService;
-use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class InviteController extends Controller
 {
+    /**
+     * @var InviteRepositoryInterface
+     */
+    private $repository;
+
     /**
      * @var InviteCreationService
      */
@@ -23,10 +26,12 @@ class InviteController extends Controller
     private $activationService;
 
     public function __construct(
-        InviteCreationService   $creationService,
-        InviteActivationService $activationService
+        InviteRepositoryInterface $repository,
+        InviteCreationService     $creationService,
+        InviteActivationService   $activationService
     )
     {
+        $this->repository = $repository;
         $this->creationService = $creationService;
         $this->activationService = $activationService;
     }
@@ -40,10 +45,14 @@ class InviteController extends Controller
     public function create(Request $request): JsonResponse
     {
         $request->validate([
-            'email' => 'required|email|unique:invites,email'
+            'email' => 'required|email|unique:invites,email',
+            'name' => 'required'
         ]);
 
-        $invite = $this->creationService->handle($request, $request->input('email'));
+        $invite = $this->creationService->handle($request, [
+            'email' => $request->input('email'),
+            'name' => $request->input('name')
+        ]);
 
         return new JsonResponse([
             'data' => [
@@ -82,5 +91,10 @@ class InviteController extends Controller
                 'activation_token' => $activation['token']
             ]
         ]);
+    }
+
+    public function all(Request $request)
+    {
+        return $this->repository->index();
     }
 }

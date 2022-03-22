@@ -37,6 +37,7 @@ class InviteRepository implements InviteRepositoryInterface
     {
         $invite = new Invite;
         $invite->email = $data['email'];
+        $invite->name = $data['name'];
         $invite->invite_key = $data['invite_key'];
         $invite->invited_by = $data['invited_by'];
         $invite->key_expiry = $data['key_expiry'];

@@ -32,27 +32,28 @@ class InviteCreationService
         $this->hasher = $hasher;
     }
 
-    public function handle(Request $request, $email)
+    public function handle(Request $request, array $data)
     {
         $key = implode('-', str_split(strtoupper(Str::random(16)), 4));
 
         $invite = $this->repository->create([
-            'email' => $email,
+            'email' => $data['email'],
+            'name' => $data['name'],
             'invite_key' => $this->hasher->make($key),
             'invited_by' => $request->user()->uuid,
             'key_expiry' => CarbonImmutable::now()->addDays(30)
         ]);
 
         try {
-            Notification::route('mail', $email)
+            Notification::route('mail', $data['email'])
                 ->notify(new Invited([
                     'key' => $key,
-                    'email' => $email
+                    'email' => $data['email']
                 ]));
 
             return $invite;
         } catch (Exception $e) {
-            $this->repository->delete($email);
+            $this->repository->delete($data['email']);
             return false;
         }
     }
