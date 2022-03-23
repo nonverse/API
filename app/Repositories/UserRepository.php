@@ -19,7 +19,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function index()
     {
-        // TODO: Implement index() method.
+        return User::all();
     }
 
     /**

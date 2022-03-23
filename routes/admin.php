@@ -13,7 +13,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
- * Invitation Route
+ * User Routes
+ *
+ * Endpoint: /admin/users
+ */
+Route::group(['prefix' => 'users'], function() {
+    // Get all users
+    Route::get('/', [\App\Http\Controllers\Admin\UserController::class, 'all']);
+});
+
+/**
+ * Invitation Routes
  *
  * Endpoint: /admin/invites
  */
@@ -26,5 +36,3 @@ Route::group(['prefix' => 'invites'], function() {
     // Delete invite
     Route::delete('/{email}', [\App\Http\Controllers\InviteController::class, 'delete']);
 });
-
-//
