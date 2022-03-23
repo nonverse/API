@@ -23,6 +23,8 @@ Route::group(['prefix' => 'invites'], function() {
     Route::get('/', [\App\Http\Controllers\InviteController::class, 'all']);
     // Create new invite(s)
     Route::get('/create', [\App\Http\Controllers\InviteController::class, 'create']);
+    // Delete invite
+    Route::delete('/{email}', [\App\Http\Controllers\InviteController::class, 'delete']);
 });
 
 //
