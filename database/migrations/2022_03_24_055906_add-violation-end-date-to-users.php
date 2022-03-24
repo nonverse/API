@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ApiEncryption extends Migration
+class AddViolationEndDateToUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class ApiEncryption extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->text('api_encryption')->nullable()->after('remember_token');
+            $table->timestamp('violation_ends_at')->after('totp_recovery_token')->nullable();
         });
     }
 

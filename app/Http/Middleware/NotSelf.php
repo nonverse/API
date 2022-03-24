@@ -12,12 +12,11 @@ class NotSelf
      *
      * @param Request $request
      * @param Closure $next
-     * @param $uuid
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $uuid)
+    public function handle(Request $request, Closure $next)
     {
-        if ($uuid === $request->user()->uuid) {
+        if ($request->route('uuid') === $request->user()->uuid) {
             return response('Cannot perform this action on self', 403);
         }
 

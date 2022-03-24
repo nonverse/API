@@ -14,7 +14,7 @@ class AddViolationsToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('violations', 12)->after('admin')->default(null);
+            $table->string('violations', 12)->after('admin')->nullable();
         });
     }
 

@@ -17,11 +17,18 @@ use Illuminate\Support\Facades\Route;
  *
  * Endpoint: /admin/users
  */
-Route::group(['prefix' => 'users'], function() {
+Route::group(['prefix' => 'users'], function () {
     // Get all users
     Route::get('/', [\App\Http\Controllers\Admin\UserController::class, 'all']);
     // Get a user by UUID
     Route::get('/{uuid}', [\App\Http\Controllers\Admin\UserController::class, 'get']);
+
+    // Administrative Routes
+    Route::group(['middleware' => 'notself'], function () {
+        Route::post('/{uuid}/suspend', [\App\Http\Controllers\Admin\UserAdministrationController::class, 'suspend']);
+        Route::post('/{uuid}/ban', [\App\Http\Controllers\Admin\UserAdministrationController::class, 'ban']);
+        Route::post('/{uuid}/pardon', [\App\Http\Controllers\Admin\UserAdministrationController::class, 'pardon']);
+    });
 });
 
 /**
@@ -30,7 +37,7 @@ Route::group(['prefix' => 'users'], function() {
  * Endpoint: /admin/invites
  */
 
-Route::group(['prefix' => 'invites'], function() {
+Route::group(['prefix' => 'invites'], function () {
     // Get all invites
     Route::get('/', [\App\Http\Controllers\InviteController::class, 'all']);
     // Create new invite(s)
