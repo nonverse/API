@@ -20,20 +20,13 @@ class InviteController extends Controller
      */
     private $creationService;
 
-    /**
-     * @var InviteActivationService
-     */
-    private $activationService;
-
     public function __construct(
         InviteRepositoryInterface $repository,
-        InviteCreationService     $creationService,
-        InviteActivationService   $activationService
+        InviteCreationService     $creationService
     )
     {
         $this->repository = $repository;
         $this->creationService = $creationService;
-        $this->activationService = $activationService;
     }
 
     /**
@@ -58,37 +51,6 @@ class InviteController extends Controller
             'data' => [
                 'success' => true,
                 'email' => $invite->email
-            ]
-        ]);
-    }
-
-    /**
-     * Activate and initialise a new user's account
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function activate(Request $request): JsonResponse
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'activation_key' => 'required'
-        ]);
-
-        $activation = $this->activationService->handle($request, $request->input('email'), $request->input('activation_key'));
-
-        if (!$activation['success']) {
-            return new JsonResponse([
-                'errors' => [
-                    'activation_key' => $activation['error']
-                ]
-            ], 401);
-        }
-
-        return new JsonResponse([
-            'data' => [
-                'success' => true,
-                'activation_token' => $activation['token']
             ]
         ]);
     }
