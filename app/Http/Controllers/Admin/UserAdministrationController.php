@@ -65,6 +65,7 @@ class UserAdministrationController extends Controller
         return new JsonResponse([
             'data' => [
                 'success' => true,
+                'violation_ends_at' => $suspension['violation_ends_at']
             ]
         ]);
     }

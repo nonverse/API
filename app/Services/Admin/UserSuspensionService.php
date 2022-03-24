@@ -54,15 +54,17 @@ class UserSuspensionService
         }
 
         // Suspend the user on the network
+        $until = CarbonImmutable::now()->addDays($period);
         $this->repository->update($uuid, [
             'violations' => 'suspended',
-            'violation_ends_at' => CarbonImmutable::now()->addDays($period)
+            'violation_ends_at' => $until
         ]);
 
         //TODO Add logic to suspend profile on the network and game server(s)
 
         return [
-            'success' => true
+            'success' => true,
+            'violation_ends_at' => $until
         ];
     }
 }
