@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'users'], function() {
     // Get all users
     Route::get('/', [\App\Http\Controllers\Admin\UserController::class, 'all']);
+    // Get a user by UUID
+    Route::get('/{uuid}', [\App\Http\Controllers\Admin\UserController::class, 'get']);
 });
 
 /**

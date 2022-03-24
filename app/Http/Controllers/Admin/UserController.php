@@ -28,4 +28,9 @@ class UserController extends Controller
     {
         return $this->repository->index();
     }
+
+    public function get($uuid)
+    {
+        return $this->repository->get($uuid);
+    }
 }
