@@ -19,8 +19,10 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $admin
  * @property bool $use_totp
  * @property string $totp_secret
+ * @property string $violations
  * @property Carbon $email_verified_at
  * @property Carbon $totp_authenticated_at
+ * @property Carbon $violation_ends_at
  * @property string $remember_token
  * @property Carbon $created_at
  * @property Carbon $updated_at
