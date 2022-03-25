@@ -31,6 +31,9 @@ Route::group(['prefix' => 'users'], function () {
     });
 });
 
+// Get all profiles
+Route::get('/profiles', [\App\Http\Controllers\Admin\ProfileController::class, 'all']);
+
 /**
  * Invitation Routes
  *

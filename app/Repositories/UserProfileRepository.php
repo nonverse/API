@@ -15,7 +15,7 @@ class UserProfileRepository implements UserProfileRepositoryInterface
      */
     public function index()
     {
-        // TODO: Implement index() method.
+        return Profile::all();
     }
 
     /**
