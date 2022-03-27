@@ -15,6 +15,7 @@ class CreateAuthMesTable extends Migration
     {
         Schema::connection('minecraft')->create('authme', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
             $table->string('username');
             $table->string('realname');
             $table->string('email');
