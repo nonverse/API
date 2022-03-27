@@ -43,4 +43,9 @@ class AuthMe extends Model
      * @var string
      */
     protected $keyType = 'string';
+
+    protected $fillable = [
+        'email',
+        'password'
+    ];
 }
