@@ -2,6 +2,7 @@
 
 namespace App\Services\Users;
 
+use App\Contracts\Repository\AuthMeRepositoryInterface;
 use App\Contracts\Repository\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Arr;
@@ -15,11 +16,18 @@ class UserUpdateService
      */
     private $repository;
 
+    /**
+     * @var AuthMeRepositoryInterface
+     */
+    private $authMeRepository;
+
     public function __construct(
-        UserRepositoryInterface $repository
+        UserRepositoryInterface   $repository,
+        AuthMeRepositoryInterface $authMeRepository
     )
     {
         $this->repository = $repository;
+        $this->authMeRepository = $authMeRepository;
     }
 
     /**
@@ -33,6 +41,9 @@ class UserUpdateService
     {
         if (Arr::has($data, 'password')) {
             $data['password'] = Hash::make($data['password']);
+            $this->authMeRepository->update($uuid, [
+                'password' => $data['password']
+            ]);
         }
         $user = $this->repository->get($uuid);
         try {
