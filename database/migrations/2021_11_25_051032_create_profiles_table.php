@@ -19,6 +19,8 @@ class CreateProfilesTable extends Migration
             $table->uuid('mc_uuid')->unique();
             $table->string('mc_username')->unique();
             $table->integer('rank')->default(1);
+            $table->string('violations', 12)->nullable();
+            $table->time('violation_ends_at')->nullable();
             $table->timestamp('profile_verified_at')->nullable();
             $table->timestamps();
         });
