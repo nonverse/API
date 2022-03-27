@@ -45,9 +45,9 @@ class ProfileCreationService
      *
      * @param $uuid
      * @param $mc_username
-     * @return Profile
+     * @return string[]
      */
-    public function handle($uuid, $mc_username): Profile
+    public function handle($uuid, $mc_username): array
     {
         $response = Http::get('https://api.mojang.com/users/profiles/minecraft/' . $mc_username);
         $user = $this->userRepository->get($uuid);
@@ -59,16 +59,20 @@ class ProfileCreationService
         ));
         $authme = $this->authMeRepository->create($uuid, [
             'mc_username' => $response['name'],
+            'email' => $user->email,
             'password_hash' => User::query()->find($uuid)->password
         ]);
 
-        if ($profile && $authme) {
+        if ($profile) {
             // Send confirmation of linking to user
             Http::withToken(env('PANEL_ADMIN_KEY'))->post('https://' . env('PANEL_APP') . '/api/client/servers/' . env('MINECRAFT_LOBBY_SERVER') . '/command', [
                 'command' => 'tellraw ' . $response['name'] . ' ["",{"text":"Your profile has successfully been linked to a Nonverse account with email ","bold":true,"color":"green"},{"text":"' . $user->email . '","color":"gold"}]'
             ]);
         }
 
-        return $profile;
+        return [
+            'profile' => $profile,
+            'authme' => $authme
+        ];
     }
 }

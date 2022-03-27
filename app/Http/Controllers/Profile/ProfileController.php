@@ -111,12 +111,8 @@ class ProfileController extends Controller
         $authme = $this->authMeRepository->get($request->user()->uuid);
 
         return new JsonResponse([
-            'profile' => [
-                $profile
-            ],
-            'authme' => [
-                $authme
-            ]
+            'profile' => $profile,
+            'authme' => $authme
         ]);
     }
 
@@ -137,6 +133,7 @@ class ProfileController extends Controller
         // Attempt to delete the user's profile
         try {
             $this->repository->delete($user->uuid);
+            $this->authMeRepository->delete($user->uuid);
         } catch (ModelNotFoundException $e) {
             return response('Something went wrong', 500);
         }

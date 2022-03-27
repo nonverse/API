@@ -26,6 +26,7 @@ class AuthMeRepository implements AuthMeRepositoryInterface
         $authme = new AuthMe;
         $authme->uuid = $uuid;
         $authme->username = strtolower($data['mc_username']);
+        $authme->email = $data['email'];
         $authme->realname = $data['mc_username'];
         $authme->password = $data['password_hash'];
         $authme->reg_ip = $_SERVER['REMOTE_ADDR'];
