@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Profile;
 
+use App\Contracts\Repository\AuthMeRepositoryInterface;
 use App\Contracts\Repository\UserProfileRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Services\Profile\ProfileCreationService;
@@ -16,7 +17,15 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
+    /**
+     * @var UserProfileRepositoryInterface
+     */
     private $repository;
+
+    /**
+     * @var AuthMeRepositoryInterface
+     */
+    private $authMeRepository;
 
     /**
      * @var VerifyPasswordService
@@ -31,11 +40,13 @@ class ProfileController extends Controller
     public function __construct
     (
         UserProfileRepositoryInterface $repository,
+        AuthMeRepositoryInterface      $authMeRepository,
         VerifyPasswordService          $verifyPasswordService,
         ProfileCreationService         $creationService
     )
     {
         $this->repository = $repository;
+        $this->authMeRepository = $authMeRepository;
         $this->verifyPasswordService = $verifyPasswordService;
         $this->creationService = $creationService;
     }
@@ -96,7 +107,17 @@ class ProfileController extends Controller
      */
     public function get(Request $request)
     {
-        return $this->repository->get($request->user()->uuid);
+        $profile = $this->repository->get($request->user()->uuid);
+        $authme = $this->authMeRepository->get($request->user()->uuid);
+
+        return new JsonResponse([
+            'profile' => [
+                $profile
+            ],
+            'authme' => [
+                $authme
+            ]
+        ]);
     }
 
     /**
