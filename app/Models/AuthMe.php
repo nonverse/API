@@ -5,6 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $uuid
+ * @property string $username
+ * @property string $realname
+ * @property string $email
+ * @property string $password
+ */
 class AuthMe extends Model
 {
     use HasFactory;
