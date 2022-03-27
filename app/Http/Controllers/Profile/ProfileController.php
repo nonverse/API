@@ -103,9 +103,9 @@ class ProfileController extends Controller
      * Get a user's profile
      *
      * @param Request $request
-     * @return mixed
+     * @return JsonResponse
      */
-    public function get(Request $request)
+    public function get(Request $request): JsonResponse
     {
         $profile = $this->repository->get($request->user()->uuid);
         $authme = $this->authMeRepository->get($request->user()->uuid);
