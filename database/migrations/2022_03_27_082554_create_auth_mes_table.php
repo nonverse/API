@@ -15,10 +15,10 @@ class CreateAuthMesTable extends Migration
     {
         Schema::connection('minecraft')->create('authme', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid');
-            $table->string('username');
-            $table->string('realname');
-            $table->string('email');
+            $table->uuid('uuid')->unique();
+            $table->string('username')->unique();
+            $table->string('realname')->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->string('ip', 40)->nullable();
             $table->bigInteger('last_login')->nullable();
@@ -31,7 +31,7 @@ class CreateAuthMesTable extends Migration
             $table->string('totp')->nullable();
             $table->smallInteger('is_logged')->nullable();
             $table->smallInteger('has_session')->default(0);
-            $table->bigInteger('reg_date');
+            $table->bigInteger('reg_date')->nullable();
             $table->string('reg_ip', 40);
             $table->timestamps();
         });
