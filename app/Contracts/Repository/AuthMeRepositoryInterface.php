@@ -7,6 +7,15 @@ use App\Models\AuthMe;
 interface AuthMeRepositoryInterface
 {
     /**
+     * Create an AuthMe for a user
+     *
+     * @param $uuid
+     * @param array $data
+     * @return AuthMe
+     */
+    public function create($uuid, array $data): AuthMe;
+
+    /**
      * Get a specific user's AuthMe
      *
      * @param $uuid

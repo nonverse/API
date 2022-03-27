@@ -21,6 +21,23 @@ class AuthMeRepository implements AuthMeRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function create($uuid, array $data): AuthMe
+    {
+        $authme = new AuthMe;
+        $authme->uuid = $uuid;
+        $authme->username = strtolower($data['mc_username']);
+        $authme->realname = $data['mc_username'];
+        $authme->password = $data['password_hash'];
+        $authme->reg_ip = $_SERVER['REMOTE_ADDR'];
+
+        $query = $authme->save();
+
+        return $authme;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function update($uuid, array $data)
     {
         try {
