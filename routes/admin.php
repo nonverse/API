@@ -45,7 +45,7 @@ Route::group(['prefix' => 'invites'], function () {
     // Get all invite requests
     Route::get('/requests', [\App\Http\Controllers\Admin\InviteRequestController::class, 'all']);
     // Create new invite(s)
-    Route::get('/create', [\App\Http\Controllers\Admin\InviteController::class, 'create']);
+    Route::post('/create', [\App\Http\Controllers\Admin\InviteController::class, 'create']);
     // Delete invite
     Route::delete('/{email}', [\App\Http\Controllers\Admin\InviteController::class, 'delete']);
 });
