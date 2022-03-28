@@ -17,16 +17,23 @@ class InviteController extends Controller
     private $repository;
 
     /**
+     * @var InviteRequestRepositoryInterface
+     */
+    private $requestRepository;
+
+    /**
      * @var InviteCreationService
      */
     private $creationService;
 
     public function __construct(
         InviteRepositoryInterface $repository,
+        InviteRequestRepositoryInterface $requestRepository,
         InviteCreationService     $creationService
     )
     {
         $this->repository = $repository;
+        $this->requestRepository = $requestRepository;
         $this->creationService = $creationService;
     }
 
@@ -89,7 +96,7 @@ class InviteController extends Controller
             ], 403);
         }
 
-        if ($this->repository->delete($email)) {
+        if ($this->repository->delete($email) && $this->requestRepository->delete($email)) {
             return new JsonResponse([
                 'data' => [
                     'success' => true
