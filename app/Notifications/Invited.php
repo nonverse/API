@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class Invited extends Notification
+class Invited extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -15,6 +15,7 @@ class Invited extends Notification
      * @var string
      */
     private $key;
+    private $invite;
 
     /**
      * Create new notification instance
@@ -32,7 +33,7 @@ class Invited extends Notification
      * @param mixed $notifiable
      * @return array
      */
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['mail'];
     }
