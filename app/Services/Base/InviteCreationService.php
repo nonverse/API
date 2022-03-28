@@ -3,6 +3,7 @@
 namespace App\Services\Base;
 
 use App\Contracts\Repository\InviteRepositoryInterface;
+use App\Contracts\Repository\InviteRequestRepositoryInterface;
 use App\Notifications\Invited;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
@@ -19,42 +20,53 @@ class InviteCreationService
     private $repository;
 
     /**
+     * @var InviteRequestRepositoryInterface
+     */
+    private $requestRepository;
+
+    /**
      * @var Hasher
      */
     private $hasher;
 
     public function __construct(
-        InviteRepositoryInterface $repository,
-        Hasher                    $hasher
+        InviteRepositoryInterface        $repository,
+        InviteRequestRepositoryInterface $requestRepository,
+        Hasher                           $hasher
     )
     {
         $this->repository = $repository;
+        $this->requestRepository = $requestRepository;
         $this->hasher = $hasher;
     }
 
-    public function handle(Request $request, array $data)
+    public function handle(Request $request, $email)
     {
         $key = implode('-', str_split(strtoupper(Str::random(16)), 4));
 
+        $inviteRequest = $this->requestRepository->get($email);
+
         $invite = $this->repository->create([
-            'email' => $data['email'],
-            'name' => $data['name'],
+            'email' => $inviteRequest->email,
+            'name' => $inviteRequest->name,
             'invite_key' => $this->hasher->make($key),
             'invited_by' => $request->user()->uuid,
             'key_expiry' => CarbonImmutable::now()->addDays(30)
         ]);
 
         try {
-            Notification::route('mail', $data['email'])
+            Notification::route('mail', $email)
                 ->notify(new Invited([
                     'key' => $key,
-                    'email' => $data['email']
+                    'email' => $email
                 ]));
-
-            return $invite;
         } catch (Exception $e) {
-            $this->repository->delete($data['email']);
+            $this->repository->delete($email);
             return false;
         }
+        $this->requestRepository->update($email, [
+            'accepted_by' => $request->user()->uuid
+        ]);
+        return $invite;
     }
 }
