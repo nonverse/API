@@ -38,6 +38,10 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+            Route::prefix('/')
+                ->middleware('web')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/base.php'));
             Route::prefix('validator')
                 ->middleware('web')
                 ->namespace($this->namespace)
