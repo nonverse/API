@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Contracts\Repository\InviteRepositoryInterface;
-use App\Services\Base\InviteActivationService;
+use App\Contracts\Repository\InviteRequestRepositoryInterface;
+use App\Http\Controllers\Controller;
 use App\Services\Base\InviteCreationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,19 +39,19 @@ class InviteController extends Controller
     public function create(Request $request): JsonResponse
     {
         $request->validate([
-            'email' => 'required|email|unique:invites,email',
-            'name' => 'required'
+            'emails' => 'required|array',
         ]);
 
-        $invite = $this->creationService->handle($request, [
-            'email' => $request->input('email'),
-            'name' => $request->input('name')
-        ]);
+        $emails = [];
+        foreach ($request->input('emails') as $email) {
+            $invite = $this->creationService->handle($request, $email);
+            $emails[] = $invite->email;
+        }
 
         return new JsonResponse([
             'data' => [
                 'success' => true,
-                'email' => $invite->email
+                'emails' => $emails
             ]
         ]);
     }
