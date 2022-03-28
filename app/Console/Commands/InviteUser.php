@@ -64,6 +64,7 @@ class InviteUser extends Command
         $invite = $this->repository->create([
             'email' => $email,
             'invite_key' => $this->hasher->make($key),
+            'name' => 'Isuru Abhayaratne',
             'invited_by' => 'nonverse-arti-san0-cli0-' . Str::random(12),
             'key_expiry' => CarbonImmutable::now()->addDays(30)
         ]);
