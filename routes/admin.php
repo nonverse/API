@@ -49,3 +49,17 @@ Route::group(['prefix' => 'invites'], function () {
     // Delete invite
     Route::delete('/{email}', [\App\Http\Controllers\Admin\InviteController::class, 'delete']);
 });
+
+ /**
+  * Server Routes
+  *
+  * Endpoint: /admin/servers
+  */
+ Route::group(['prefix' => 'servers'], function() {
+     // Get all servers
+     Route::get('/', [\App\Http\Controllers\Admin\Network\ServerBaseController::class, 'all']);
+     // Get a server by id
+     Route::get('/{id}', [\App\Http\Controllers\Admin\Network\ServerBaseController::class, 'get']);
+     // Start a server
+     Route::post('/{id}/start', [\App\Http\Controllers\Admin\Network\ServerBaseController::class, 'start']);
+ });
