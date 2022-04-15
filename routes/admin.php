@@ -24,6 +24,7 @@ Route::group(['prefix' => 'users'], function () {
 
     // Administrative Routes
     Route::group(['middleware' => 'notself'], function () {
+        //Route::post('/{uuid}/upgrade', [\App\Http\Controllers\Admin\UserAdministrationController::class, 'upgrade']);
         Route::post('/{uuid}/suspend', [\App\Http\Controllers\Admin\UserAdministrationController::class, 'suspend']);
         Route::post('/{uuid}/ban', [\App\Http\Controllers\Admin\UserAdministrationController::class, 'ban']);
         Route::post('/{uuid}/pardon', [\App\Http\Controllers\Admin\UserAdministrationController::class, 'pardon']);

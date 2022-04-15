@@ -6,12 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Services\Admin\UserBanService;
 use App\Services\Admin\UserPardonService;
 use App\Services\Admin\UserSuspensionService;
+use App\Services\Admin\UserUpgradeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psy\Util\Json;
 
 class UserAdministrationController extends Controller
 {
+    /**
+     * @var UserUpgradeService
+     */
+    private $upgradeService;
+
     /**
      * @var UserSuspensionService
      */
@@ -28,14 +34,42 @@ class UserAdministrationController extends Controller
     private $pardonService;
 
     public function __construct(
+        UserUpgradeService $upgradeService,
         UserSuspensionService $suspensionService,
         UserBanService        $banService,
         UserPardonService     $pardonService
     )
     {
+        $this->upgradeService = $upgradeService;
         $this->suspensionService = $suspensionService;
         $this->banService = $banService;
         $this->pardonService = $pardonService;
+    }
+
+    /**
+     * Upgrade a user's account to Administrator
+     *
+     * @param $uuid
+     * @return JsonResponse
+     */
+    public function upgrade($uuid): JsonResponse
+    {
+
+        $upgrade = $this->upgradeService->handle($uuid);
+
+        if (!$upgrade['success']) {
+            return new JsonResponse([
+                'errors' => [
+                    'suspension' => $upgrade['error']
+                ]
+            ], 400);
+        }
+
+        return new JsonResponse([
+            'data' => [
+                'success' => true,
+            ]
+        ]);
     }
 
     /**
