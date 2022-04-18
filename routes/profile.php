@@ -24,5 +24,5 @@ Route::group(['middleware' => 'auth'], function () {
 
 // Auth or API token required
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/', [\App\Http\Controllers\Profile\ProfileController::class, 'get'])->middleware(['profile', 'ability:profile:view']);
+    Route::get('/', [\App\Http\Controllers\Profile\ProfileController::class, 'get'])->middleware(['ability:profile:view', 'profile']);
 });
