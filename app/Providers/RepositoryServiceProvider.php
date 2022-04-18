@@ -6,12 +6,14 @@ use App\Contracts\Repository\ApiKeyRepositoryInterface;
 use App\Contracts\Repository\AuthMeRepositoryInterface;
 use App\Contracts\Repository\InviteRepositoryInterface;
 use App\Contracts\Repository\InviteRequestRepositoryInterface;
+use App\Contracts\Repository\SettingRepositoryInterface;
 use App\Contracts\Repository\UserProfileRepositoryInterface;
 use App\Contracts\Repository\UserRepositoryInterface;
 use App\Repositories\ApiKeyRepository;
 use App\Repositories\AuthMeRepository;
 use App\Repositories\InviteRepository;
 use App\Repositories\InviteRequestRepository;
+use App\Repositories\SettingRepository;
 use App\Repositories\UserProfileRepository;
 use App\Repositories\UserRepository;
 use Carbon\Laravel\ServiceProvider;
@@ -26,6 +28,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(InviteRepositoryInterface::class, InviteRepository::class);
         $this->app->bind(AuthMeRepositoryInterface::class, AuthMeRepository::class);
         $this->app->bind(InviteRequestRepositoryInterface::class, InviteRequestRepository::class);
+        $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
     }
 
 }
