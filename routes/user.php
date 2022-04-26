@@ -37,6 +37,9 @@ Route::group(['middleware' => 'auth'], function () {
     // Delete a user's account
     Route::delete('store', [\App\Http\Controllers\User\UserDeletionController::class, 'delete']);
 
+    // Update a user's preferences
+    Route::post('/preferences', [\App\Http\Controllers\User\UserPreferenceController::class, 'update']);
+
     // (Re)send a user's email verification link
     Route::post('/email', [\App\Http\Controllers\User\EmailVerificationController::class, 'resend'])->name('verification.send');
     // Verify a user's email address
@@ -54,4 +57,6 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Get a user's details
     Route::get('store', [\App\Http\Controllers\User\UserBaseController::class, 'get'])->middleware('ability:store:view');
+    // Get a user's network preferences
+    Route::get('preferences', [\App\Http\Controllers\User\UserPreferenceController::class, 'all'])->middleware('ability:preferences:view');
 });
