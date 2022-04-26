@@ -11,7 +11,7 @@ class SettingRepository implements SettingRepositoryInterface
 {
     public function index($uuid): object
     {
-        return Setting::query()->find($uuid)->get();
+        return Setting::query()->where('uuid', $uuid)->get();
     }
 
 //    /**
@@ -25,12 +25,12 @@ class SettingRepository implements SettingRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function create($uuid, array $data): Setting
+    public function create($uuid, $key, $value): Setting
     {
         $setting = new Setting;
         $setting->uuid = $uuid;
-        $setting->key = $data['key'];
-        $setting->value = $data['value'];
+        $setting->key = $key;
+        $setting->value = $value;
 
         $query = $setting->save();
 
@@ -44,7 +44,7 @@ class SettingRepository implements SettingRepositoryInterface
     {
 
         try {
-            $setting = Setting::query()->findOrFail($uuid)->where('key', $key)->first();
+            $setting = Setting::query()->where([['uuid', $uuid], ['key', $key]])->firstOrFail();
         } catch (ModelNotFoundException $e) {
             return false;
         }

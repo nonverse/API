@@ -20,10 +20,11 @@ interface SettingRepositoryInterface
 
     /**
      * @param $uuid
-     * @param array $data
+     * @param $key
+     * @param $value
      * @return Setting
      */
-    public function create($uuid, array $data): Setting;
+    public function create($uuid, $key, $value): Setting;
 
     /**
      * @param $uuid
