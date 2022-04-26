@@ -37,7 +37,11 @@ class UserPreferenceService
                 'success' => true
             ];
         }
-        // TODO - Fix error where updating one setting will update all settings to that value
+        /*
+         * TODO - Fix error where updating one setting will update all settings to that value
+         *        This is not currently an issue as there is only 1 app setting, but as more
+         *        settings are added it will be a big problem
+         */
 
         /*
          * If the setting does not exists, create it and persist
