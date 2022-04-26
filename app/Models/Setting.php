@@ -43,4 +43,15 @@ class Setting extends Model
     protected $fillable = [
         'value'
     ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'uuid',
+        'created_at',
+        'updated_at'
+    ];
 }
