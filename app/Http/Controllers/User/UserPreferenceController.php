@@ -52,26 +52,23 @@ class UserPreferenceController extends Controller
             'settings' => 'required|array'
         ]);
 
-        $keys = [];
-        foreach ($request->input('settings') as $key => $value) {
-            $update = $this->preferenceService->handle($request->user()->uuid, $key, $value);
-            if ($update['success']) {
-                $keys[] = $key;
-            }
-        }
+        $update = $this->preferenceService->handle($request->user()->uuid, $request->input('settings'));
 
-        if (!$keys) {
+        if ($update['success']) {
             return new JsonResponse([
-                'errors' => [
-                    'settings' => 'Something went wrong'
+                'data' => [
+                    'success' => true,
+                    'settings_updated' => $update['keys']
                 ]
-            ], 400);
+            ]);
         }
 
         return new JsonResponse([
             'data' => [
-                'success' => true,
-                'settings_updated' => $keys
+                'success' => false
+            ],
+            'errors' => [
+                'keys' => 'Something went wrong'
             ]
         ]);
 

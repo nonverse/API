@@ -22,34 +22,35 @@ class UserPreferenceService
      * Update a user's setting and persist to database
      *
      * @param $uuid
-     * @param $key
-     * @param $value
+     * @param array $settings
      * @return bool[]
      */
-    public function handle($uuid, $key, $value): array
+    public function handle($uuid, array $settings): array
     {
 
-        /*
-         * Attempt to update a user's setting on the database
-         */
-        if ($this->repository->update($uuid, $key, $value)) {
-            return [
-                'success' => true
-            ];
-        }
-        /*
-         * TODO - Fix error where updating one setting will update all settings to that value.
-         *        This is not currently an issue as there is only 1 app setting, but as more
-         *        settings are added it will be a big problem
-         */
+        $keys = [];
 
-        /*
-         * If the setting does not exists, create it and persist
-         * to database
-         */
-        if ($this->repository->create($uuid, $key, $value)) {
+        // TODO Fix preference persistence issue
+        foreach ($settings as $key => $value) {
+
+
+            // Attempt to update a user's preference on the database
+            if (!$this->repository->update($uuid, $key, $value)) {
+
+                /*
+                 * If the preference setting does not exist for that user,
+                 * create it and persist to database
+                 */
+                $this->repository->create($uuid, $key, $value);
+            }
+
+            $keys[] = $key;
+        }
+
+        if ($keys) {
             return [
-                'success' => true
+                'success' => true,
+                'keys' => $keys
             ];
         }
 
