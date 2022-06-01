@@ -5,7 +5,6 @@ namespace App\Http;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\HasValidProfile;
 use App\Http\Middleware\NotSelf;
-use App\Http\Middleware\TokenAuthenticate;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -62,7 +61,6 @@ class Kernel extends HttpKernel
         'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
         'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
-        //'auth' => TokenAuthenticate::class,
         'admin' => Admin::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
