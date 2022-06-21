@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Activate a user's account (No auth required)
-Route::post('/activate', [\App\Http\Controllers\User\UserCreationController::class, 'activate']);
+// Verify a user's activation key (No auth required)
+Route::post('/verify', [\App\Http\Controllers\User\UserCreationController::class, 'verify']);
 
 // Create user (No auth required)
 Route::post('/', [\App\Http\Controllers\User\UserCreationController::class, 'store']);

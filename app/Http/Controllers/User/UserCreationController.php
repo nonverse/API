@@ -53,19 +53,20 @@ class UserCreationController extends Controller
     }
 
     /**
-     * Activate a user's email and prepare for registration
+     * Verify a user's activation key
+     * This does not consume the key
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function activate(Request $request): JsonResponse
+    public function verify(Request $request): JsonResponse
     {
         $request->validate([
             'email' => 'required|email',
             'activation_key' => 'required'
         ]);
 
-        $activation = $this->activationService->handle($request, $request->input('email'), $request->input('activation_key'));
+        $activation = $this->activationService->handle($request->input('email'), $request->input('activation_key'));
 
         if (!$activation['success']) {
             return new JsonResponse([
@@ -78,7 +79,6 @@ class UserCreationController extends Controller
         return new JsonResponse([
             'data' => [
                 'success' => true,
-                'activation_token' => $activation['token']
             ]
         ]);
     }
@@ -98,42 +98,20 @@ class UserCreationController extends Controller
             'name_first' => 'required',
             'name_last' => 'required',
             'password' => 'required|min:8|confirmed',
-            'activation_token' => 'required'
+            'activation_key' => 'required'
         ]);
 
         /*
-         * Check if a valid activation token is present in the session
+         * Check the user's activation key again before continuing registration
          */
-        $details = $request->session()->get('activation_token');
-        if (!$this->validateSessionDetails($details)) {
+        $activation = $this->activationService->handle($request->input('email'), $request->input('activation_key'));
+
+        if (!$activation['success']) {
             return new JsonResponse([
                 'errors' => [
-                    'token' => 'Activation token has expired'
+                    'activation_key' => $activation['error']
                 ]
             ], 401);
-        }
-
-        /*
-         * Check if the provided activation token is valid
-         */
-        if ($request->input('activation_token') !== $details['token_value']) {
-            return new JsonResponse([
-                'errors' => [
-                    'token' => 'Invalid activation token'
-                ]
-            ], 401);
-        }
-
-        /*
-         * Check if the email that is requesting to be registered
-         * is the same as the one the activation token was issued for
-         */
-        if ($request->input('email') !== $details['email']) {
-            return new JsonResponse([
-                'errors' => [
-                    'email' => 'Request data mismatch'
-                ]
-            ], 400);
         }
 
         // Check if a user's password contains any part of their name(s)
@@ -149,14 +127,10 @@ class UserCreationController extends Controller
 
         // Create new user and persist to database
         $user = $this->creationService->handle($request->all());
+        // Mark the user's activation key as used
         $this->inviteRepository->update($request->input('email'), [
             'claimed_by' => $user->uuid
         ]);
-
-        // Login the user after registration
-        $request->session()->regenerate();
-        Auth::loginUsingId($user->uuid, false); //TODO Post registration login does not seem to be working
-        $cookie = cookie('uuid', $user->uuid, 2628000);
 
         // Dispatch user registration event upon successful registration
         event(new Registered($user));
@@ -166,35 +140,6 @@ class UserCreationController extends Controller
                 'complete' => true,
                 'uuid' => $user->uuid,
             ]
-        ])->cookie($cookie);
-    }
-
-    /**
-     * Verify that the session details are valid
-     *
-     * @param array $details
-     * @return bool
-     */
-    protected function validateSessionDetails(array $details): bool
-    {
-        $validator = Validator::make($details, [
-            'email' => 'required|email',
-            'token_value' => 'required|string',
-            'token_expiry' => 'required'
         ]);
-
-        if ($validator->fails()) {
-            return false;
-        }
-
-        if (!$details['token_expiry'] instanceof CarbonInterface) {
-            return false;
-        }
-
-        if ($details['token_expiry']->isBefore(CarbonImmutable::now())) {
-            return false;
-        }
-
-        return true;
     }
 }

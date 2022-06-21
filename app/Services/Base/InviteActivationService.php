@@ -41,7 +41,7 @@ class InviteActivationService
      * @param $key
      * @return array
      */
-    public function handle(Request $request, $email, $key): array
+    public function handle($email, $key): array
     {
         $invite = $this->repository->get($email);
 
@@ -73,17 +73,8 @@ class InviteActivationService
             ];
         }
 
-        $token = Str::random(64);
-
-        $request->session()->put('activation_token', [
-            'email' => $request->input('email'),
-            'token_value' => $token,
-            'token_expiry' => CarbonImmutable::now()->addMinutes(15)
-        ]);
-
         return [
             'success' => true,
-            'token' => $token
         ];
     }
 }
