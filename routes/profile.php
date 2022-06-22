@@ -23,6 +23,6 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 // Auth or API token required
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::group(['middleware' => 'auth'], function () { // TODO Update middleware for API keys
     Route::get('/', [\App\Http\Controllers\Profile\ProfileController::class, 'get'])->middleware(['ability:profile:view', 'profile']);
 });

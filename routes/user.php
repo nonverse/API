@@ -54,7 +54,7 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 // Auth or API token required
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::group(['middleware' => 'auth'], function () { // TODO Update middleware for API keys
     // Get a user's details
     Route::get('store', [\App\Http\Controllers\User\UserBaseController::class, 'get'])->middleware('ability:store:view');
     // Get a user's network preferences

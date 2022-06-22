@@ -8,6 +8,7 @@ use Exception;
 
 class KeyCreationService
 {
+    // TODO Update methods to use new API key system(s)
 
     /**
      * @var UserRepositoryInterface

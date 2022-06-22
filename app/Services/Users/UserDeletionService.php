@@ -34,7 +34,6 @@ class UserDeletionService
         $this->inviteRepository = $inviteRepository;
     }
 
-    //TODO Include logic to check for profile and delete other user data
     public function handle($uuid): bool
     {
         $user = $this->repository->get($uuid);
