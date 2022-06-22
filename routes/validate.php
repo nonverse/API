@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+/*
+ * Activation key validation
+ * Can only be accessed by SecureAuth
+ */
+Route::post('/activation-key', [\App\Http\Controllers\User\UserCreationController::class, 'verify'])->middleware('secureauth');
+
 // User validation
 Route::group(['prefix' => 'user'], function() {
     Route::post('/', [\App\Http\Controllers\Validation\UserValidationController::class, 'validateNewUser']);

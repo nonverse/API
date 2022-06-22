@@ -12,11 +12,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Verify a user's activation key (No auth required)
-Route::post('/verify', [\App\Http\Controllers\User\UserCreationController::class, 'verify']);
-
 // Create user (No auth required)
-Route::post('/', [\App\Http\Controllers\User\UserCreationController::class, 'store']);
+Route::post('/', [\App\Http\Controllers\User\UserCreationController::class, 'store'])->middleware('secureauth');
 Route::get('/', function () {
     return redirect('/user/store');
 });
