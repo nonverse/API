@@ -9,6 +9,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.4",
         "laravel/framework": "^8.65",
+        "laravel/passport": "*",
         "laravel/tinker": "^2.5",
         "pragmarx/google2fa": "^8.0",
         "predis/predis": "^1.1"
