@@ -39,10 +39,11 @@ interface RepositoryInterface
      * Update row by ID
      *
      * @param $id
-     * @param $data
+     * @param array $data
+     * @param bool $force
      * @return Model
      */
-    public function update($id, $data): Model;
+    public function update($id, array $data, bool $force): Model;
 
     /**
      * Delete row
