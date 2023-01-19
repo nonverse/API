@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('totp_recovery_token')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('totp_authenticated_at')->nullable();
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });
