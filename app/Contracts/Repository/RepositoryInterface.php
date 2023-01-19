@@ -2,6 +2,7 @@
 
 namespace App\Contracts\Repository;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 interface RepositoryInterface
@@ -23,6 +24,8 @@ interface RepositoryInterface
      *
      * @param $id
      * @return Model
+     * @throws Exception
+     *
      */
     public function get($id): Model;
 
@@ -42,6 +45,7 @@ interface RepositoryInterface
      * @param array $data
      * @param bool $force
      * @return Model
+     * @throws Exception
      */
     public function update($id, array $data, bool $force): Model;
 
@@ -49,7 +53,9 @@ interface RepositoryInterface
      * Delete row
      *
      * @param $id
+     * @param bool $destroy
      * @return bool
+     * @throws Exception
      */
-    public function delete($id): bool;
+    public function delete($id, bool $destroy): bool;
 }
