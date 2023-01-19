@@ -64,7 +64,7 @@ abstract class Repository implements RepositoryInterface
             throw new Exception('Record not found', 404);
         }
 
-        return $entry->fresh();
+        return $entry;
     }
 
     /**v
@@ -85,11 +85,7 @@ abstract class Repository implements RepositoryInterface
      */
     public function update($id, array $data, bool $force = false): Model
     {
-        try {
-            $entry = $this->getBuilder()->findOrFail($id);
-        } catch (ModelNotFoundException) {
-            throw new Exception('Record not found', 404);
-        }
+        $entry = $this->get($id);
 
         ($force) ? $entry->forceFill($data) : $entry->fill($data);
         $entry->save();
@@ -102,11 +98,7 @@ abstract class Repository implements RepositoryInterface
      */
     public function delete($id, bool $destroy = false): bool
     {
-        try {
-            $entry = $this->getBuilder()->findOrFail($id);
-        } catch (ModelNotFoundException) {
-            throw new Exception('Record not found', 404);
-        }
+        $entry = $this->get($id);
 
         return ($destroy) ? $entry->forceDelete() : $entry->delete();
     }
