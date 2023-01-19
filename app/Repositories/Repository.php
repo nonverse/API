@@ -15,8 +15,6 @@ abstract class Repository implements RepositoryInterface
      */
     protected Model $model;
 
-    protected string $primaryKey = 'id';
-
     public function __construct(protected Application $app)
     {
         $this->initializeModel($this->model());
@@ -50,7 +48,7 @@ abstract class Repository implements RepositoryInterface
      */
     public function index(): object
     {
-        // TODO: Implement index() method.
+        return $this->getBuilder()->get();
     }
 
     /**
@@ -58,7 +56,7 @@ abstract class Repository implements RepositoryInterface
      */
     public function get($id): Model
     {
-        // TODO: Implement get() method.
+        return $this->getBuilder()->findOrFail($id);
     }
 
     /**v
