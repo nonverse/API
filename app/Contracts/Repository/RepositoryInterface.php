@@ -29,10 +29,11 @@ interface RepositoryInterface
     /**
      * Create new row
      *
-     * @param $data
+     * @param array $data
+     * @param bool $force
      * @return Model
      */
-    public function create($data): Model;
+    public function create(array $data, bool $force): Model;
 
     /**
      * Update row by ID
