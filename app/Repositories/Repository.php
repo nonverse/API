@@ -3,9 +3,11 @@
 namespace App\Repositories;
 
 use App\Contracts\Repository\RepositoryInterface;
+use Exception;
 use http\Exception\InvalidArgumentException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 
 abstract class Repository implements RepositoryInterface
@@ -56,30 +58,56 @@ abstract class Repository implements RepositoryInterface
      */
     public function get($id): Model
     {
-        return $this->getBuilder()->findOrFail($id);
+        try {
+            $entry = $this->getBuilder()->findOrFail($id);
+        } catch (ModelNotFoundException) {
+            throw new Exception('Record not found', 404);
+        }
+
+        return $entry->fresh();
     }
 
     /**v
      * @inheritDoc
      */
-    public function create($data): Model
+    public function create(array $data, bool $force = false): Model
     {
-        // TODO: Implement create() method.
+        $entry = $this->getBuilder()->newModelInstance();
+
+        ($force) ? $entry->forceFill($data) : $entry->fill($data);
+        $entry->save();
+
+        return $entry->fresh();
     }
 
     /**
      * @inheritDoc
      */
-    public function update($id, $data): Model
+    public function update($id, array $data, bool $force = false): Model
     {
-        // TODO: Implement update() method.
+        try {
+            $entry = $this->getBuilder()->findOrFail($id);
+        } catch (ModelNotFoundException) {
+            throw new Exception('Record not found', 404);
+        }
+
+        ($force) ? $entry->forceFill($data) : $entry->fill($data);
+        $entry->save();
+
+        return $entry->fresh();
     }
 
     /**
      * @inheritDoc
      */
-    public function delete($id): bool
+    public function delete($id, bool $destroy = false): bool
     {
-        // TODO: Implement delete() method.
+        try {
+            $entry = $this->getBuilder()->findOrFail($id);
+        } catch (ModelNotFoundException) {
+            throw new Exception('Record not found', 404);
+        }
+
+        return ($destroy) ? $entry->forceDelete() : $entry->delete();
     }
 }
