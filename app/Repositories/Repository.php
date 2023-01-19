@@ -15,6 +15,8 @@ abstract class Repository implements RepositoryInterface
      */
     protected Model $model;
 
+    protected string $primaryKey = 'id';
+
     public function __construct(protected Application $app)
     {
         $this->initializeModel($this->model());
@@ -30,14 +32,16 @@ abstract class Repository implements RepositoryInterface
      */
     protected function initializeModel(string ...$model): mixed
     {
-        return match (count($model)) {
-            1 => $this->model = $this->app->make($model[0]),
-            2 => $this->model = call_user_func([$this->app->make($model[0]), $model[1]]),
-            default => throw new InvalidArgumentException('Invalid model provided'),
-        };
+        return
+            match (count($model)) {
+                1 => $this->model = $this->app->make($model[0]),
+                2 => $this->model = call_user_func([$this->app->make($model[0]), $model[1]]),
+                default => throw new InvalidArgumentException('Invalid model provided'),
+            };
     }
 
-    public function getBuilder(): Builder {
+    public function getBuilder(): Builder
+    {
         return $this->model->newQuery();
     }
 
@@ -57,7 +61,7 @@ abstract class Repository implements RepositoryInterface
         // TODO: Implement get() method.
     }
 
-    /**
+    /**v
      * @inheritDoc
      */
     public function create($data): Model
