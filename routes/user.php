@@ -18,7 +18,7 @@ Route::post('/', [\App\Http\Controllers\User\UserController::class, 'store']);
 /**
  * Authentication required
  */
-Route::group([], function() {
+Route::group(['middleware' => 'auth:api'], function() {
     // Get user store
     Route::get('/store', [\App\Http\Controllers\User\UserController::class, 'get']);
     // Update user store
