@@ -54,12 +54,14 @@ class UserController extends Controller
      * Get a user from database
      *
      * @param Request $request
-     * @return Model
+     * @return JsonResponse
      * @throws Exception
      */
-    public function get(Request $request): Model
+    public function get(Request $request): JsonResponse
     {
-        return $this->repository->get($request->user()->uuid);
+        return new JsonResponse([
+            'data' => $this->repository->get($request->user()->uuid)
+        ]);
     }
 
     /**
