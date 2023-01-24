@@ -89,7 +89,7 @@ class UserController extends Controller
             return new JsonResponse([
                 'success' => false,
                 'errors' => $validator->errors()
-            ]);
+            ], 422);
         }
 
         $user = $this->creationService->handle($validator->validated());
@@ -111,10 +111,13 @@ class UserController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
+        $user = $request->user();
+
         $validator = Validator::make($request->input(), [
-            'email' => 'email:rfc,dns|unique:users,email',
-            'username' => 'unique:users,username',
-            'phone' => 'min:7|max:15',
+            'email' => 'email:rfc,dns|unique:users,email,'.$user->uuid.',uuid',
+            'username' => 'unique:users,username,'.$user->uuid.',uuid',
+            'phone' => 'min:7|max:15|nullable',
+            'dob' => 'nullable',
             'password' => 'min:8'
         ],
             [
@@ -126,7 +129,7 @@ class UserController extends Controller
             return new JsonResponse([
                 'success' => false,
                 'errors' => $validator->errors()
-            ]);
+            ], 422);
         }
 
         $user = $this->updateService->handle($request->user()->uuid, $request->input());
@@ -153,6 +156,6 @@ class UserController extends Controller
 
         return new JsonResponse([
             'success' => false
-        ]);
+        ], 400);
     }
 }
