@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Create new user
-Route::post('/', [\App\Http\Controllers\User\UserController::class, 'store']);
+Route::post('/', [\App\Http\Controllers\User\UserController::class, 'store'])->middleware('auth.authkey');
 
 /**
  * Authentication required
