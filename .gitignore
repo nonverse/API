@@ -19,3 +19,4 @@ yarn-error.log
 /cert
 OAuth.png
 .rnd
+/.vagrant/machines/auth/virtualbox/action_set_name
