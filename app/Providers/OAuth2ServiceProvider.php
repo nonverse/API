@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repositories\OAuth2\AccessTokenRepository;
 use App\Repositories\UserRepository;
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
@@ -33,10 +34,11 @@ class OAuth2ServiceProvider extends ServiceProvider
             if ($request->bearerToken()) {
                 try {
                     $jwt = (array)JWT::decode($request->bearerToken(), new Key(config('oauth.public_key'), 'RS256'));
-                } catch (Exception $e) {
+                    $accessToken = (new AccessTokenRepository($this->app))->get($jwt['jti']);
+                }
+                catch (Exception $e) {
                     return;
                 }
-                $accessToken = (new AccessTokenRepository($this->app))->get($jwt['jti']);
 
                 //TODO validate client
 
