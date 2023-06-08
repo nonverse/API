@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('oauth_scopes', function (Blueprint $table) {
             $table->string('id', 100);
             $table->string('description');
-            $table->boolean('third_party')->default(1);
+            $table->uuid('client_id')->nullable();
             $table->timestamps();
         });
     }
