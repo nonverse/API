@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +15,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return new \Illuminate\Http\JsonResponse([
+    return new JsonResponse([
         'application_name' => env('APP_NAME'),
         'identifier' => env('APP_IDENTIFIER'),
         'version' => env('APP_VERSION'),
         'current_user' => null
     ]);
 });
+
+Route::get('http-401-unauthorized', function () {
+    return new JsonResponse([
+        'error' => 'unauthorized'
+    ], 401);
+})->name('login');
