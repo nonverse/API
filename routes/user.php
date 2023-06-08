@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 | User API Routes
 |--------------------------------------------------------------------------
 |
-| Endpoint: /api/user
+| Endpoint: /user
 |
 */
 
