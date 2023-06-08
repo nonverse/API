@@ -22,6 +22,20 @@ trait HasApiTokens
     }
 
     /**
+     * Check if a user's access token has a given scope
+     *
+     * @param $scope
+     * @return bool
+     */
+    public function tokenCan($scope): bool
+    {
+        if (in_array($scope, explode(" ", $this->accessToken->scopes))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Add access token to user instance
      *
      * @param $accessToken
