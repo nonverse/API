@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models\OAuth2;
+namespace App\Services\User\OAuth2;
+
+use App\Models\OAuth2\AccessToken;
 
 trait HasApiTokens
 {
