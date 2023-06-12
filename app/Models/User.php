@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
+use App\Services\User\OAuth2\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens ,HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     /**
      * The primary key associated with the table
@@ -42,6 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name_first',
         'name_last',
+        'username',
         'email',
         'phone',
         'dob',

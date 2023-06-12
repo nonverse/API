@@ -8,11 +8,9 @@ use App\Services\User\UserCreationService;
 use App\Services\User\UserDeletionService;
 use App\Services\User\UserUpdateService;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Js;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -78,6 +76,8 @@ class UserController extends Controller
             'name_first' => 'required|string',
             'name_last' => 'required|string',
             'username' => 'required|string|unique:users,username',
+            'phone' => 'string|min:7|max:15',
+            'dob' => 'date',
             'password' => 'required|min:8|confirmed'
         ],
             [
@@ -114,14 +114,10 @@ class UserController extends Controller
         $user = $request->user();
 
         $validator = Validator::make($request->input(), [
-            'email' => 'email:rfc,dns|unique:users,email,'.$user->uuid.',uuid',
-            'username' => 'unique:users,username,'.$user->uuid.',uuid',
-            'phone' => 'min:7|max:15|nullable',
-            'dob' => 'nullable',
-            'password' => 'min:8'
+            'username' => 'unique:users,username,' . $user->uuid . ',uuid',
+            'dob' => 'date',
         ],
             [
-                'email.unique' => 'This email is already in use by another account',
                 'username.unique' => 'This username has already been taken',
             ]);
 
@@ -132,7 +128,9 @@ class UserController extends Controller
             ], 422);
         }
 
-        $user = $this->updateService->handle($request->user()->uuid, $request->input());
+        $user = $this->updateService->handle($request->user()->uuid, $request->only(
+            ['name_first', 'name_last', 'username', 'dob', 'gender']
+        ));
 
         return new JsonResponse([
             'success' => true,
