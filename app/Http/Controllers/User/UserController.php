@@ -114,14 +114,10 @@ class UserController extends Controller
         $user = $request->user();
 
         $validator = Validator::make($request->input(), [
-            'email' => 'email:rfc,dns|unique:users,email,' . $user->uuid . ',uuid',
             'username' => 'unique:users,username,' . $user->uuid . ',uuid',
-            'phone' => 'min:7|max:15|nullable',
-            'dob' => 'nullable',
-            'password' => 'min:8'
+            'dob' => 'date',
         ],
             [
-                'email.unique' => 'This email is already in use by another account',
                 'username.unique' => 'This username has already been taken',
             ]);
 
@@ -133,7 +129,7 @@ class UserController extends Controller
         }
 
         $user = $this->updateService->handle($request->user()->uuid, $request->only(
-            ['name_first', 'name_last', 'username', 'email', 'phone', 'dob']
+            ['name_first', 'name_last', 'username', 'dob', 'gender']
         ));
 
         return new JsonResponse([
