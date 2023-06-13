@@ -42,4 +42,13 @@ class Recovery extends Model
         'phone',
         'totp_recovery'
     ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'totp_token'
+    ];
 }
