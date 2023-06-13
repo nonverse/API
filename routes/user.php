@@ -27,4 +27,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         // Delete user store
         Route::delete('/', [\App\Http\Controllers\User\UserController::class, 'delete']);
     });
+
+    // User recovery routes
+    Route::prefix('recovery')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\RecoveryController::class, 'get']);
+    });
 });
