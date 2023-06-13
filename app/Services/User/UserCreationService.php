@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\Contracts\Repository\RecoveryRepositoryInterface;
 use App\Contracts\Repository\UserRepositoryInterface;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Model;
@@ -15,16 +16,23 @@ class UserCreationService
     private UserRepositoryInterface $repository;
 
     /**
+     * @var RecoveryRepositoryInterface
+     */
+    private RecoveryRepositoryInterface $recoveryRepository;
+
+    /**
      * @var Hasher
      */
     private Hasher $hasher;
 
     public function __construct(
-        UserRepositoryInterface $userRepository,
-        Hasher                  $hasher
+        UserRepositoryInterface     $userRepository,
+        RecoveryRepositoryInterface $recoveryRepository,
+        Hasher                      $hasher
     )
     {
         $this->repository = $userRepository;
+        $this->recoveryRepository = $recoveryRepository;
         $this->hasher = $hasher;
     }
 
@@ -34,7 +42,8 @@ class UserCreationService
      * @param array $data
      * @return Model
      */
-    public function handle(array $data): Model {
+    public function handle(array $data): Model
+    {
 
         /**
          * Generate a new UUID and password hash
@@ -44,6 +53,10 @@ class UserCreationService
             'uuid' => Str::uuid(),
             'password' => $this->hasher->make($data['password'])
         ];
+
+        $this->recoveryRepository->create([
+            'uuid' => $data['uuid']
+        ], true);
 
         return $this->repository->create($data, true);
     }
