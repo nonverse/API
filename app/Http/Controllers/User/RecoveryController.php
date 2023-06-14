@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Contracts\Repository\RecoveryRepositoryInterface;
+use App\Contracts\Repository\Auth\RecoveryRepositoryInterface;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;

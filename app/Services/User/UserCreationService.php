@@ -2,7 +2,7 @@
 
 namespace App\Services\User;
 
-use App\Contracts\Repository\RecoveryRepositoryInterface;
+use App\Contracts\Repository\Auth\RecoveryRepositoryInterface;
 use App\Contracts\Repository\UserRepositoryInterface;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Model;

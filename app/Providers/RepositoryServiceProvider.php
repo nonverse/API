@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use App\Contracts\Repository\Auth\AuthorizationTokenRepositoryInterface;
-use App\Contracts\Repository\RecoveryRepositoryInterface;
+use App\Contracts\Repository\Auth\RecoveryRepositoryInterface;
 use App\Contracts\Repository\RepositoryInterface;
 use App\Contracts\Repository\UserRepositoryInterface;
 use App\Repositories\Auth\AuthorizationTokenRepository;
-use App\Repositories\RecoveryRepository;
+use App\Repositories\Auth\RecoveryRepository;
 use App\Repositories\Repository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;

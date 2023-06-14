@@ -2,7 +2,7 @@
 
 namespace App\Services\User\TwoStep;
 
-use App\Contracts\Repository\RecoveryRepositoryInterface;
+use App\Contracts\Repository\Auth\RecoveryRepositoryInterface;
 use App\Contracts\Repository\UserRepositoryInterface;
 use App\Models\User;
 use App\Notifications\TwoFactorEnabled;
