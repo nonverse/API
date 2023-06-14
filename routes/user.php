@@ -28,8 +28,20 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/', [\App\Http\Controllers\User\UserController::class, 'delete']);
     });
 
-    // User recovery routes
-    Route::prefix('recovery')->group(function () {
-        Route::get('/', [\App\Http\Controllers\User\RecoveryController::class, 'get']);
+    // User security routes
+    Route::prefix('/security')->group(function () {
+        // User recovery routes
+        Route::prefix('/recovery')->group(function () {
+            // Get user recovery details
+            Route::get('/', [\App\Http\Controllers\User\RecoveryController::class, 'get']);
+        });
+
+        // User Two-Step routes
+        Route::prefix('/two-step')->group(function () {
+            // Get Two=Step setup data
+            Route::get('/',  [\App\Http\Controllers\User\TwoFactorController::class, 'get']);
+        });
     });
+
+
 });
