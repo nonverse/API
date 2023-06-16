@@ -5,10 +5,12 @@ namespace App\Http\Middleware;
 use App\Contracts\Repository\Auth\AuthorizationTokenRepositoryInterface;
 use Closure;
 use Exception;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthorizationToken
 {
@@ -70,8 +72,28 @@ class AuthorizationToken
         if ($token->action_id !== $actionId) {
             return $this->forbiddenRequestResponse();
         }
-        
+
         return $next($request);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function terminate(Request $request, Response $response)
+    {
+        try {
+            $jwt = (array)JWT::decode($request->input('authorization_token'), new Key(config('oauth.public_key'), 'RS256'));
+        } catch (ExpiredException $e) {
+        }
+
+        /**
+         * Revoke authorization token if response is successful
+         */
+        if ($response->isSuccessful()) {
+            $this->repository->update($jwt['jti'], [
+                'revoked' => 1
+            ]);
+        }
     }
 
     /**
