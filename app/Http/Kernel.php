@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AuthKey;
+use App\Http\Middleware\AuthorizationToken;
 use App\Http\Middleware\CheckForScope;
 use App\Http\Middleware\CheckForScopes;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -73,5 +74,6 @@ class Kernel extends HttpKernel
 
         // Custom Middlewares
         'auth.authkey' => AuthKey::class,
+        'confirmed' => AuthorizationToken::class,
     ];
 }
