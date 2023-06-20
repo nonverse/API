@@ -11,7 +11,9 @@
         "laravel/framework": "^9.19",
         "laravel/tinker": "^2.7",
         "pragmarx/google2fa": "^8.0",
-        "predis/predis": "^2.1"
+        "predis/predis": "^2.1",
+        "symfony/http-client": "^6.2",
+        "symfony/mailgun-mailer": "^6.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
