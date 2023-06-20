@@ -38,8 +38,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         // User Two-Step routes
         Route::prefix('/two-step')->group(function () {
-            // Get Two=Step setup data
-            Route::get('/',  [\App\Http\Controllers\User\TwoFactorController::class, 'get']);
+            // Get Two-Step setup data
+            Route::get('/', [\App\Http\Controllers\User\TwoFactorController::class, 'get']);
+            Route::post('/', [\App\Http\Controllers\User\TwoFactorController::class, 'enable'])->middleware('confirmed:update_two_step_login');
         });
     });
 
