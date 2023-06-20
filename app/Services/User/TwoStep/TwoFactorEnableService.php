@@ -26,7 +26,7 @@ class TwoFactorEnableService
     /**
      * @var RecoveryRepositoryInterface
      */
-    private RecoveryRepositoryInterface $recoveryRepositroy;
+    private RecoveryRepositoryInterface $recoveryRepository;
 
     /**
      * @var Encrypter
@@ -46,7 +46,7 @@ class TwoFactorEnableService
     )
     {
         $this->repository = $repository;
-        $this->recoveryRepositroy = $recoveryRepository;
+        $this->recoveryRepository = $recoveryRepository;
         $this->encrypter = $encrypter;
         $this->google2FA = $google2FA;
     }
@@ -82,7 +82,7 @@ class TwoFactorEnableService
 //            'totp_authenticated_at' => CarbonImmutable::now()
         ]);
 
-        $this->recoveryRepositroy->update($user->uuid, [
+        $this->recoveryRepository->update($user->uuid, [
             'totp_token' => Hash::make($token)
         ]);
 
@@ -95,7 +95,7 @@ class TwoFactorEnableService
 //                'totp_authenticated_at' => CarbonImmutable::now()
             ]);
 
-            $this->recoveryRepositroy->update($user->uuid, [
+            $this->recoveryRepository->update($user->uuid, [
                 'totp_token' => null
             ]);
 
