@@ -50,6 +50,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'admin',
         'restrictions',
+        'totp_secret',
+        'use_totp',
     ];
 
     /**
