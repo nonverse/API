@@ -63,7 +63,9 @@ class TwoFactorEnableService
         try {
             $secret = $this->encrypter->decrypt($user->totp_secret);
         } catch (Exception $e) {
-            throw new RuntimeException($e->getMessage());
+            return [
+                'success' => false
+            ];
         }
 
         if (!$this->google2FA->verifyKey($secret, $code)) {
