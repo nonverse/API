@@ -8,8 +8,8 @@ use Carbon\CarbonImmutable;
 use Exception;
 use http\Exception\RuntimeException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
@@ -28,8 +28,8 @@ class TwoFactorController
     private TwoFactorEnableService $enableService;
 
     public function __construct(
-        TwoFactorSetupService   $setupService,
-        TwoFactorEnableService  $enableService
+        TwoFactorSetupService  $setupService,
+        TwoFactorEnableService $enableService
     )
     {
         $this->setupService = $setupService;
@@ -68,9 +68,21 @@ class TwoFactorController
             'code' => 'required'
         ]);
 
+        $enabled = $this->enableService->handle($request->user(), $request->input('code'));
+
+        if ($enabled['success']) {
+            return new JsonResponse([
+                'data' => [
+                    'success' => true
+                ]
+            ]);
+        }
+
         return new JsonResponse([
-            'data' => $this->enableService->handle($request->user(), $request->input('code'))
-        ]);
+            'data' => [
+                'success' => false
+            ]
+        ], 400);
     }
 
     /**
