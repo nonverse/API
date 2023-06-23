@@ -32,5 +32,9 @@ class VerifyPhoneVerificationCodeService
                 'success' => true
             ];
         }
+
+        return [
+            'success' => false
+        ];
     }
 }
