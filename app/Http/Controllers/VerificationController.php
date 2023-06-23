@@ -30,6 +30,9 @@ class VerificationController extends Controller
      */
     public function send(Request $request): JsonResponse
     {
+        /**
+         * Validate request
+         */
         $validator = Validator::make($request->all(), [
             'channel' => 'required',
             'phone' => 'required_without:email|min:7|max:15|prohibits:email',
@@ -43,6 +46,9 @@ class VerificationController extends Controller
             ], 422);
         }
 
+        /**
+         * If verification delivery channel is phone...
+         */
         if ($request->input('channel') == 'phone') {
             return $this->sendVerificationToPhone($request->input('phone'));
         }
@@ -63,7 +69,9 @@ class VerificationController extends Controller
      */
     protected function sendVerificationToPhone(string $phone): JsonResponse
     {
-
+        /**
+         * Attempt to send verification code to phone number
+         */
         try {
             $this->sendPhoneVerificationCodeService->handle($phone);
         } catch (Exception) {

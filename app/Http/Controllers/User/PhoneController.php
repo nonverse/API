@@ -31,8 +31,17 @@ class PhoneController extends Controller
         $this->verifyPhoneVerificationCodeService = $verifyPhoneVerificationCodeService;
     }
 
-    public function update(Request $request)
+    /**
+     * Handle user phone update request
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function update(Request $request): JsonResponse
     {
+        /**
+         * Validate request
+         */
         $validator = Validator::make($request->all(), [
             'phone' => 'required|min:7|max:15',
             'code' => 'required|min:6|max:6'
@@ -45,6 +54,9 @@ class PhoneController extends Controller
             ], 422);
         }
 
+        /**
+         * Attempt to verify phone verification code
+         */
         try {
             $check = $this->verifyPhoneVerificationCodeService->handle($request->input('phone'), $request->input('code'));
         } catch (Exception $e) {
@@ -53,6 +65,9 @@ class PhoneController extends Controller
             ], 400);
         }
 
+        /**
+         * If verification code is incorrect, return HTTP 401
+         */
         if (!$check['success']) {
             return new JsonResponse([
                 'success' => false,
@@ -62,6 +77,9 @@ class PhoneController extends Controller
             ], 401);
         }
 
+        /**
+         * Attempt to update user's phone number and persist to database
+         */
         try {
             $this->userRepository->update($request->user()->uuid, [
                 'phone' => $request->input('phone')
