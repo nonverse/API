@@ -26,6 +26,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/', [\App\Http\Controllers\User\UserController::class, 'update']);
         // Delete user store
         Route::delete('/', [\App\Http\Controllers\User\UserController::class, 'delete']);
+        // Update a user's phone number
+        Route::post('/phone', [\App\Http\Controllers\User\PhoneController::class, 'update'])->middleware('confirmed:update_phone');
     });
 
     // User security routes
