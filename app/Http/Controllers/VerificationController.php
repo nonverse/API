@@ -52,7 +52,7 @@ class VerificationController extends Controller
             'errors' => [
                 'channel' => 'invalid delivery channel'
             ]
-        ]);
+        ], 400);
     }
 
     /**
