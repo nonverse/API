@@ -39,6 +39,7 @@ class SettingsController extends Controller
     public function get(Request $request): JsonResponse
     {
         $settings = $this->settingsRepository->getUserSettings($request->user()->uuid);
+        $response = [];
         foreach ($settings as $setting) {
             $response[$setting['key']] = $setting['value'];
         }
@@ -89,8 +90,8 @@ class SettingsController extends Controller
         }
 
         $cookie = cookie('settings', json_encode([
-            'theme' => $settings['theme'],
-            'language' => $settings['language']
+            'theme' => array_key_exists('theme', $settings) ? $settings['theme'] : 'system',
+            'language' => array_key_exists('language', $settings) ? $settings['language'] : 'en-AU'
         ]), 43800, null, env('SESSION_PARENT_DOMAIN'), false, false);
 
         return response()->json([
