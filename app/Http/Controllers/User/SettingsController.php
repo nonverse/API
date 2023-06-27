@@ -81,8 +81,20 @@ class SettingsController extends Controller
             ], 400);
         }
 
-        return new JsonResponse([
-            'success' => true,
-        ]);
+        /**
+         * Get updated user settings
+         */
+        foreach ($this->settingsRepository->getUserSettings($request->user()->uuid) as $setting) {
+            $settings[$setting['key']] = $setting['value'];
+        }
+
+        $cookie = cookie('settings', json_encode([
+            'theme' => $settings['theme'],
+            'language' => $settings['language']
+        ]), 43800, null, env('SESSION_PARENT_DOMAIN'), false, false);
+
+        return response()->json([
+            'success' => true
+        ])->withCookie($cookie);
     }
 }
