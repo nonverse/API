@@ -47,7 +47,7 @@ class PasswordController extends Controller
 
 
         $user = $request->user();
-        $restricted = strtolower($user->name_first + $user->name_last + $user->username + $user->email);
+        $restricted = strtolower($user->name_first . $user->name_last . $user->username . $user->email);
 
         /**
          * Check if password contains user's personal information
