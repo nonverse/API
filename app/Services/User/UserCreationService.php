@@ -4,6 +4,7 @@ namespace App\Services\User;
 
 use App\Contracts\Repository\Auth\RecoveryRepositoryInterface;
 use App\Contracts\Repository\UserRepositoryInterface;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -58,6 +59,10 @@ class UserCreationService
             'uuid' => $data['uuid']
         ], true);
 
-        return $this->repository->create($data, true);
+        $user = $this->repository->create($data, true);
+
+        event(new Registered($user));
+
+        return $user;
     }
 }
