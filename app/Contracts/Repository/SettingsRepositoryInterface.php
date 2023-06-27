@@ -13,4 +13,12 @@ interface SettingsRepositoryInterface extends RepositoryInterface
      * @return object
      */
     public function getUserSettings(string $uuid): object;
+
+    /**
+     * @param string $uuid
+     * @param string $key
+     * @param string $value
+     * @return Model
+     */
+    public function updateByUuidAndKey(string $uuid, string $key, string $value): Model;
 }
