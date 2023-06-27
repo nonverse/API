@@ -24,9 +24,9 @@ class UpdateUserSettingsService
      *
      * @param string $uuid
      * @param array $data
-     * @return false[]|true[]
+     * @throws Exception
      */
-    public function handle(string $uuid, array $data): array
+    public function handle(string $uuid, array $data): void
     {
         /**
          * Get user's current settings
@@ -57,14 +57,8 @@ class UpdateUserSettingsService
                     ], true);
                 }
             } catch (Exception $e) {
-                return [
-                    'success' => false
-                ];
+                throw new Exception();
             }
         }
-
-        return [
-            'success' => true
-        ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services\User;
 use App\Contracts\Repository\UserRepositoryInterface;
 use Exception;
 use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Database\Eloquent\Model;
 
 class UpdateUserPasswordService
 {
@@ -30,22 +31,14 @@ class UpdateUserPasswordService
     /**
      * @param string $uuid
      * @param string $password
-     * @return array
+     * @return Model
+     * @throws Exception
      */
-    public function handle(string $uuid, string $password): array
+    public function handle(string $uuid, string $password): Model
     {
-        try {
-            $this->repository->update($uuid, [
-                'password' => $this->hasher->make($password)
-            ], true);
-        } catch (Exception $e) {
-            return [
-                'success' => false
-            ];
-        }
+        return $this->repository->update($uuid, [
+            'password' => $this->hasher->make($password)
+        ], true);
 
-        return [
-            'success' => true
-        ];
     }
 }

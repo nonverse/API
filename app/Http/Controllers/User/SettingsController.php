@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Contracts\Repository\SettingsRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Services\User\UpdateUserSettingsService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -74,12 +75,12 @@ class SettingsController extends Controller
         /**
          * Attempt to update user's settings
          */
-        $settings = $this->updateUserSettingsService->handle($request->user()->uuid, $request->input('settings'));
-
-        if (!$settings['success']) {
+        try {
+            $this->updateUserSettingsService->handle($request->user()->uuid, $request->input('settings'));
+        } catch (Exception $e) {
             return new JsonResponse([
-                'success' => false,
-            ], 400);
+                'success' => false
+            ]);
         }
 
         /**
