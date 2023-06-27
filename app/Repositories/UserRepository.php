@@ -16,4 +16,13 @@ class UserRepository extends Repository implements UserRepositoryInterface
     {
         return User::class;
     }
+
+    public function create(array $data, bool $force = false): User
+    {
+        $user = new User;
+        ($force) ? $user->forceFill($data) : $user->fill($data);
+        $user->save();
+
+        return $user->fresh();
+    }
 }
