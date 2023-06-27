@@ -34,16 +34,18 @@ class SettingsController extends Controller
      * Handle request to get user's settings
      *
      * @param Request $request
-     * @return array
+     * @return JsonResponse
      */
-    public function get(Request $request): array
+    public function get(Request $request): JsonResponse
     {
         $settings = $this->settingsRepository->getUserSettings($request->user()->uuid);
         foreach ($settings as $setting) {
             $response[$setting['key']] = $setting['value'];
         }
 
-        return $response;
+        return new JsonResponse([
+            'data' => $response
+        ]);
     }
 
     /**
