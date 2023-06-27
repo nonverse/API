@@ -31,6 +31,7 @@ class UpdateUserSettingsService
         /**
          * Get user's current settings
          */
+        $settings = [];
         foreach ($this->settingsRepository->getUserSettings($uuid) as $setting) {
             $settings[$setting['key']] = $setting['value'];
         }
