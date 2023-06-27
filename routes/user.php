@@ -45,4 +45,9 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::post('/', [\App\Http\Controllers\User\TwoFactorController::class, 'enable'])->middleware('confirmed:update_two_step_login');
         });
     });
+
+    Route::prefix('/settings')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\SettingsController::class, 'get']);
+        Route::post('/', [\App\Http\Controllers\User\SettingsController::class, 'update']);
+    });
 });
