@@ -29,6 +29,7 @@ return new class extends Migration {
             $table->string('pin')->nullable();
             $table->string('totp_secret')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('phone_verified_at')->nullable();
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
