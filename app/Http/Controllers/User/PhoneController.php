@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Contracts\Repository\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Services\Phone\VerifyPhoneVerificationCodeService;
+use Carbon\CarbonImmutable;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -82,7 +83,8 @@ class PhoneController extends Controller
          */
         try {
             $this->userRepository->update($request->user()->uuid, [
-                'phone' => $request->input('phone')
+                'phone' => $request->input('phone'),
+                'phone_verified_at' => CarbonImmutable::now()
             ]);
         } catch (Exception $e) {
             return new JsonResponse([
