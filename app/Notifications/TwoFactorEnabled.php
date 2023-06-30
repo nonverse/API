@@ -51,8 +51,8 @@ class TwoFactorEnabled extends Notification
     public function toMail(): MailMessage
     {
         return (new MailMessage)
-            ->from('no-reply@auth.nonverse.net', 'Nonverse SecureAuth')
-            ->subject('2FA Enabled')
+            ->from('no-reply@account.nonverse.net', 'Nonverse Account')
+            ->subject('Two-Step login enabled')
             ->markdown('mail.two-factor-enabled', [
                 'name' => $this->user->name_first,
                 'token' => $this->token
