@@ -1,5 +1,5 @@
 @component('mail::message')
-# Hello {{$name}},
+# Hello<span class="splash">,</span> {{$name}},
 
 Two-Step login has been enabled on your account.
 
@@ -15,6 +15,6 @@ In the event that you lose access to your authenticator app, your recovery token
     If you did not enable Two-Step login for your account, please use your recovery token to login and <a href="{{env('ACCOUNT_APP_URL')}}/account/support" target="_blank" rel="noreferrer">contact support</a> immediately
 @endcomponent
 
-With Love,<br>
+With love,<br>
 {{ config('app.name') }}
 @endcomponent
