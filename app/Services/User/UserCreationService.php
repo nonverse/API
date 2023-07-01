@@ -4,7 +4,7 @@ namespace App\Services\User;
 
 use App\Contracts\Repository\Auth\RecoveryRepositoryInterface;
 use App\Contracts\Repository\UserRepositoryInterface;
-use Illuminate\Auth\Events\Registered;
+use Exception;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -29,7 +29,7 @@ class UserCreationService
     public function __construct(
         UserRepositoryInterface     $userRepository,
         RecoveryRepositoryInterface $recoveryRepository,
-        Hasher                      $hasher
+        Hasher                      $hasher,
     )
     {
         $this->repository = $userRepository;
@@ -42,6 +42,7 @@ class UserCreationService
      *
      * @param array $data
      * @return Model
+     * @throws Exception
      */
     public function handle(array $data): Model
     {
@@ -55,13 +56,24 @@ class UserCreationService
             'password' => $this->hasher->make($data['password'])
         ];
 
-        $this->recoveryRepository->create([
-            'uuid' => $data['uuid']
-        ], true);
-
-        $user = $this->repository->create($data, true);
-
-        event(new Registered($user));
+        try {
+            /**
+             * Create new user in database
+             */
+            $user = $this->repository->create($data, true);
+            /**
+             * Create new user recovery entry
+             */
+            $this->recoveryRepository->create([
+                'uuid' => $user->uuid,
+            ], true);
+            /**
+             * Send email verification
+             */
+            $user->sendEmailVerification();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
 
         return $user;
     }
