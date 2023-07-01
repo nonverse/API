@@ -46,7 +46,7 @@ trait VerifiesEmail
      *
      * @throws Exception
      */
-    public function verifyEmail(): void
+    public function markEmailAsVerified(): void
     {
         $this->update([
             'email_verified_at' => CarbonImmutable::now()

@@ -83,7 +83,7 @@ class EmailController extends Controller
          * Attempt to mark user's email as verified
          */
         try {
-            $user->verifyEmail();
+            $user->markEmailAsVerified();
         } catch (Exception $e) {
             return new JsonResponse([
                 'success' => false
