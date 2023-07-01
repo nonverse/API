@@ -6,6 +6,8 @@ use App\Notifications\VerifyEmail;
 use Carbon\CarbonImmutable;
 use Exception;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use Illuminate\Http\JsonResponse;
 
 trait VerifiesEmail
 {
@@ -42,12 +44,27 @@ trait VerifiesEmail
     }
 
     /**
-     * Mark a user's email as verified
+     * Verify a user's email
      *
      * @throws Exception
      */
-    public function markEmailAsVerified(): void
+    public function verifyEmail(string $token): void
     {
+        /**
+         * Decode verification token
+         */
+        $decoded = (array)JWT::decode($token, new Key(config('oauth.public_key'), 'RS256'));
+
+        /**
+         * Check if verification token UUID and E-Mail match that of the user's
+         */
+        if ($decoded['sub'] !== $this->uuid || $decoded['email'] !== $this->email) {
+            throw new Exception('User data unauthorized');
+        }
+
+        /**
+         * Mark e-mail as verified
+         */
         $this->update([
             'email_verified_at' => CarbonImmutable::now()
         ]);
