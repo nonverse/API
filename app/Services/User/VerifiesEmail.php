@@ -3,6 +3,7 @@
 namespace App\Services\User;
 
 use App\Notifications\VerifyEmail;
+use Carbon\CarbonImmutable;
 use Exception;
 use Firebase\JWT\JWT;
 
@@ -38,5 +39,17 @@ trait VerifiesEmail
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Mark a user's email as verified
+     *
+     * @throws Exception
+     */
+    public function verifyEmail(): void
+    {
+        $this->update([
+            'email_verified_at' => CarbonImmutable::now()
+        ]);
     }
 }
