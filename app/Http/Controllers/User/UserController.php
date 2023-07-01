@@ -67,7 +67,6 @@ class UserController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
@@ -92,7 +91,13 @@ class UserController extends Controller
             ], 422);
         }
 
-        $user = $this->creationService->handle($validator->validated());
+        try {
+            $user = $this->creationService->handle($validator->validated());
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+            ], 400);
+        }
 
         return new JsonResponse([
             'success' => true,
