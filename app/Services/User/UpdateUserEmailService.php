@@ -55,7 +55,7 @@ class UpdateUserEmailService
                 'email_verified_at' => null
             ]);
 
-            $userUpdated->sendEmailVerificationNotification();
+            $userUpdated->sendEmailVerification();
         } catch (Exception $e) {
             $this->repository->update($uuid, [
                 'email' => $user->email,
