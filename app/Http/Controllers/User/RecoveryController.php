@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RecoveryController extends Controller
 {
@@ -33,6 +34,62 @@ class RecoveryController extends Controller
     {
         return new JsonResponse([
             'data' => $this->repository->get($request->user()->uuid)
+        ]);
+    }
+
+    /**
+     * Handle request to update user's recovery e-mail
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateEmail(Request $request): JsonResponse
+    {
+        /**
+         * Validate request
+         */
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email:rfc,dns',
+            'owned' => 'required|boolean'
+        ]);
+
+        if ($validator->fails()) {
+            return new JsonResponse([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        /**
+         * Get user from request
+         */
+        $user = $request->user();
+
+        /**
+         * Check that recovery email is different from account email
+         */
+        if ($request->input('email') === $user->email) {
+            return new JsonResponse([
+                'success' => false,
+                'errors' => [
+                    'email' => 'Recovery e-mail cannot be same as account e-mail'
+                ]
+            ], 422);
+        }
+
+        /**
+         * Attempt to update user's recovery email
+         */
+        try {
+            $user->updateRecoveryEmail($request->input('email'), $request->input('owned'));
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+            ], 400);
+        }
+
+        return new JsonResponse([
+            'success' => true
         ]);
     }
 }
