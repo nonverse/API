@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Services\User\UpdateUserEmailService;
 use Exception;
 use Firebase\JWT\ExpiredException;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -52,7 +54,19 @@ class EmailController extends Controller
          * Attempt to mark user's email as verified
          */
         try {
-            $request->user()->verifyEmail($request->input('token'));
+            $jwt = (array)JWT::decode($request->input('token'), new Key(config('oauth.public_key'), 'RS256'));
+
+            if (str_starts_with($jwt['sub'], 'r-')) {
+                /**
+                 * If the user is verifying a recovery email
+                 */
+                $request->user()->verifyRecoveryEmail($request->input('token'));
+            } else {
+                /**
+                 * Verify account email
+                 */
+                $request->user()->verifyEmail($request->input('token'));
+            }
         } catch (ExpiredException $e) {
             return new JsonResponse([
                 'success' => false,
