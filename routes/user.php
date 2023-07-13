@@ -48,6 +48,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::prefix('/recovery')->group(function () {
             // Get user recovery details
             Route::get('/', [\App\Http\Controllers\User\RecoveryController::class, 'get']);
+            // Update user's recovery email
+            Route::post('/email', [\App\Http\Controllers\User\RecoveryController::class, 'updateEmail'])->middleware('confirmed:update_recovery_email');
         });
     });
 
