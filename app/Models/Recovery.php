@@ -40,7 +40,10 @@ class Recovery extends Model
     protected $fillable = [
         'email',
         'phone',
-        'totp_token'
+        'totp_token',
+        'email_verified_at',
+        'phone_verified_at',
+        'email_belongs_to_user'
     ];
 
     /**

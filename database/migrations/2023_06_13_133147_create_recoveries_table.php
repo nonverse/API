@@ -18,6 +18,9 @@ return new class extends Migration {
             $table->string('email')->nullable();
             $table->string('phone', 15)->nullable();
             $table->string('totp_token')->nullable();
+            $table->boolean('email_belongs_to_user')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('phone_verified_at')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +32,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('recoveries');
+        Schema::dropIfExists('recovery');
     }
 };
