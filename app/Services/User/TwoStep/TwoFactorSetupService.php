@@ -29,12 +29,11 @@ class TwoFactorSetupService
 
     public function __construct(
         UserRepositoryInterface $repository,
-        Encrypter               $encrypter,
         Google2FA               $google2FA
     )
     {
         $this->repository = $repository;
-        $this->encrypter = $encrypter;
+        $this->encrypter = new \Illuminate\Encryption\Encrypter(base64_decode(str_replace('base64:', '', env('APP_SHARED_KEY'))), config('app.cipher'));
         $this->google2FA = $google2FA;
     }
 
