@@ -21,7 +21,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     // User store routes
     Route::prefix('/store')->group(function () {
         // Get user store
-        Route::get('/', [\App\Http\Controllers\User\UserController::class, 'get']);
+        Route::get('/', [\App\Http\Controllers\User\UserController::class, 'get'])->middleware('scope:user.store.read');
         // Update user store
         Route::post('/', [\App\Http\Controllers\User\UserController::class, 'update']);
         // Delete user store
@@ -53,8 +53,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         });
     });
 
+    // User settings routes
     Route::prefix('/settings')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\SettingsController::class, 'get']);
         Route::post('/', [\App\Http\Controllers\User\SettingsController::class, 'update']);
     });
+
+    // User services routes
+    Route::prefix('/services')->group(base_path('routes/user/services.php'));
 });
