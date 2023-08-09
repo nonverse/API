@@ -39,7 +39,7 @@ class UpdateUserEmailService
             /**
              * Finish service if email is unchanged
              */
-            if ($user->email === $email) {
+            if ($user->email === $email && $user->email_verified_at) {
                 return;
             }
         } catch (Exception $e) {
