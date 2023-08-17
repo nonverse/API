@@ -41,13 +41,12 @@ class TwoFactorEnableService
     public function __construct(
         UserRepositoryInterface     $repository,
         RecoveryRepositoryInterface $recoveryRepository,
-        Encrypter                   $encrypter,
         Google2FA                   $google2FA
     )
     {
         $this->repository = $repository;
         $this->recoveryRepository = $recoveryRepository;
-        $this->encrypter = $encrypter;
+        $this->encrypter = new \Illuminate\Encryption\Encrypter(base64_decode(str_replace('base64:', '', env('APP_SHARED_KEY'))), config('app.cipher'));
         $this->google2FA = $google2FA;
     }
 
