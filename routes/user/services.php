@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
+ * Get list of all services linked to user's account
+ */
+Route::get('/', [\App\Http\Controllers\User\ServicesController::class, 'get']);
+
+/**
  * Minecraft Service
  * First party auth required
  */
