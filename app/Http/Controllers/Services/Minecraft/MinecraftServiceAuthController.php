@@ -1,22 +1,33 @@
 <?php
 
-namespace App\Http\Controllers\Services;
+namespace App\Http\Controllers\Services\Minecraft;
 
 use App\Http\Controllers\Controller;
+use App\Services\Services\Minecraft\MinecraftAuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
-class MinecraftServiceController extends Controller
+class MinecraftServiceAuthController extends Controller
 {
+    /**
+     * @var MinecraftAuthService
+     */
+    private MinecraftAuthService $minecraftAuthService;
+
+    public function __construct(
+        MinecraftAuthService $minecraftAuthService
+    ) {
+        $this->minecraftAuthService = $minecraftAuthService;
+    }
+
     /**
      * Verify a user's Minecraft username
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function verify(Request $request): JsonResponse
+    public function validateUsername(Request $request): JsonResponse
     {
         /**
          * Validate request
@@ -32,12 +43,7 @@ class MinecraftServiceController extends Controller
             ], 422);
         }
 
-        /**
-         * Check username with Mojang API
-         */
-        $response = json_decode(Http::get('https://api.mojang.com/users/profiles/minecraft/' . $request->input('username')), true);
-
-        if (!array_key_exists('id', $response)) {
+        if (!$this->minecraftAuthService->validateUsername($request->input('username'))) {
             return new JsonResponse([
                 'success' => false,
                 'errors' => [
@@ -49,8 +55,21 @@ class MinecraftServiceController extends Controller
         return new JsonResponse([
             'success' => true,
             'data' => [
-                'uuid' => $response['id']
+//                'uuid' => $response['id']
             ]
         ]);
+    }
+
+    public function send(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return new JsonResponse([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ]);
+        }
     }
 }
