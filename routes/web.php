@@ -17,9 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return new JsonResponse([
         'application_name' => env('APP_NAME'),
-        'identifier' => env('APP_IDENTIFIER'),
+        'application_description' => 'Nonverse application programming interface',
+        'internal_identifier' => env('APP_IDENTIFIER'),
+        'environment' => 'closed_development',
         'version' => env('APP_VERSION'),
-        'current_user' => null
+        'user' => null
     ]);
 });
 
