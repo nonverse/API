@@ -23,17 +23,17 @@ Route::group(['middleware' => 'auth:api'], function () {
         // Get user store
         Route::get('/', [\App\Http\Controllers\User\UserController::class, 'get'])->middleware('scope:user.store.read');
         // Update user store
-        Route::post('/', [\App\Http\Controllers\User\UserController::class, 'update']);
+        Route::post('/', [\App\Http\Controllers\User\UserController::class, 'update'])->middleware('scope:*');
         // Delete user store
-        Route::delete('/', [\App\Http\Controllers\User\UserController::class, 'delete']);
+        Route::delete('/', [\App\Http\Controllers\User\UserController::class, 'delete'])->middleware('scope:*');
         // Update a user's email address
-        Route::post('/email', [\App\Http\Controllers\User\EmailController::class, 'update'])->middleware('confirmed:update_email');
+        Route::post('/email', [\App\Http\Controllers\User\EmailController::class, 'update'])->middleware(['confirmed:update_email', 'scope:*']);
         // Update a user's phone number
-        Route::post('/phone', [\App\Http\Controllers\User\PhoneController::class, 'update'])->middleware('confirmed:update_phone');
+        Route::post('/phone', [\App\Http\Controllers\User\PhoneController::class, 'update'])->middleware(['confirmed:update_phone', 'scope:*']);
     });
 
     // User security routes
-    Route::prefix('/security')->group(function () {
+    Route::prefix('/security')->middleware('scope:*')->group(function () {
         // User Two-Step routes
         Route::prefix('/two-step')->group(function () {
             // Get Two-Step setup data
@@ -55,8 +55,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // User settings routes
     Route::prefix('/settings')->group(function () {
-        Route::get('/', [\App\Http\Controllers\User\SettingsController::class, 'get']);
-        Route::post('/', [\App\Http\Controllers\User\SettingsController::class, 'update']);
+        Route::get('/', [\App\Http\Controllers\User\SettingsController::class, 'get'])->middleware('scope:user.settings.read');
+        Route::post('/', [\App\Http\Controllers\User\SettingsController::class, 'update'])->middleware('scope:user.settings.update');
     });
 
     // User services routes
