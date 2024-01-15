@@ -27,6 +27,7 @@ class OneTimePassword extends Model
         'user_id',
         'action_id',
         'value',
+        'channel',
         'revoked',
         'expires_at'
     ];
