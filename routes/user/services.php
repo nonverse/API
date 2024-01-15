@@ -21,6 +21,8 @@ Route::get('/', [\App\Http\Controllers\User\ServicesController::class, 'get']);
  * First party auth required
  */
 Route::prefix('/minecraft')->group(function () {
-    // Validate user's Minecraft username
-    Route::post('validate', [\App\Http\Controllers\Services\MinecraftServiceController::class, 'verify']);
+    Route::prefix('/auth')->middleware('scope:*')->group(function () {
+        // Validate user's Minecraft username
+        Route::post('validate', [\App\Http\Controllers\Services\Minecraft\MinecraftServiceAuthController::class, 'validateUsername']);
+    });
 });
