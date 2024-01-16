@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Auth\OneTimePasswordService;
 use App\Services\Phone\SendPhoneVerificationCodeService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -15,11 +16,18 @@ class VerificationController extends Controller
      */
     private SendPhoneVerificationCodeService $sendPhoneVerificationCodeService;
 
+    /**
+     * @var OneTimePasswordService
+     */
+    private OneTimePasswordService $oneTimePasswordService;
+
     public function __construct(
-        SendPhoneVerificationCodeService $sendPhoneVerificationCodeService
+        SendPhoneVerificationCodeService $sendPhoneVerificationCodeService,
+        OneTimePasswordService           $oneTimePasswordService
     )
     {
         $this->sendPhoneVerificationCodeService = $sendPhoneVerificationCodeService;
+        $this->oneTimePasswordService = $oneTimePasswordService;
     }
 
     /**
@@ -35,8 +43,7 @@ class VerificationController extends Controller
          */
         $validator = Validator::make($request->all(), [
             'channel' => 'required',
-            'phone' => 'required_without:email|min:7|max:15|prohibits:email',
-            'email' => 'required_without:phone|email:rfc,dns|prohibits:phone'
+            'target' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -50,7 +57,12 @@ class VerificationController extends Controller
          * If verification delivery channel is phone...
          */
         if ($request->input('channel') == 'phone') {
-            return $this->sendVerificationToPhone($request->input('phone'));
+            // Validate target
+            return new JsonResponse($this->sendVerificationToPhone($request->input('target')));
+        }
+
+        if (in_array($request->input('channel'), config('auth.one_time_passwords.channels'))) {
+            return new JsonResponse($this->oneTimePasswordService->send($request->user(), $request->input('channel'), $request->input('action_id')));
         }
 
         return new JsonResponse([

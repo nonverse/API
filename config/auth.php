@@ -18,6 +18,15 @@ return [
         'passwords' => 'users',
     ],
 
+    'one_time_passwords' => [
+        'expiry' => 5, // (Minutes)
+        'length' => 6,
+        'channels' => [
+            'phone',
+            'email',
+        ]
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
