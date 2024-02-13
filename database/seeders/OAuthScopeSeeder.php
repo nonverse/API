@@ -33,9 +33,11 @@ class OAuthScopeSeeder extends Seeder
      * OAuth scopes and their description
      */
     protected array $scopes = [
-        '*' => 'Have full access to view and edit your account',
+        'user.*' => 'Have full access to view and edit your account',
         'user.store.read' => 'View your basic info',
-        'user.settings.read' => 'View your application settings'
+        'user.settings.read' => 'View your application settings',
+        'labs.*' => 'Have full access to your Nonverse Labs data',
+
     ];
 
     /**

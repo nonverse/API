@@ -23,17 +23,17 @@ Route::group(['middleware' => 'auth:api'], function () {
         // Get user store
         Route::get('/', [\App\Http\Controllers\User\UserController::class, 'get'])->middleware('scope:user.store.read');
         // Update user store
-        Route::post('/', [\App\Http\Controllers\User\UserController::class, 'update'])->middleware('scope:*');
+        Route::post('/', [\App\Http\Controllers\User\UserController::class, 'update'])->middleware('scope:user.*');
         // Delete user store
-        Route::delete('/', [\App\Http\Controllers\User\UserController::class, 'delete'])->middleware('scope:*');
+        Route::delete('/', [\App\Http\Controllers\User\UserController::class, 'delete'])->middleware('scope:user.*');
         // Update a user's email address
-        Route::post('/email', [\App\Http\Controllers\User\EmailController::class, 'update'])->middleware(['confirmed:update_email', 'scope:*']);
+        Route::post('/email', [\App\Http\Controllers\User\EmailController::class, 'update'])->middleware(['confirmed:update_email', 'scope:user.*']);
         // Update a user's phone number
-        Route::post('/phone', [\App\Http\Controllers\User\PhoneController::class, 'update'])->middleware(['confirmed:update_phone', 'scope:*']);
+        Route::post('/phone', [\App\Http\Controllers\User\PhoneController::class, 'update'])->middleware(['confirmed:update_phone', 'scope:user.*']);
     });
 
     // User security routes
-    Route::prefix('/security')->middleware('scope:*')->group(function () {
+    Route::prefix('/security')->middleware('scope:user.*')->group(function () {
         // User Two-Step routes
         Route::prefix('/two-step')->group(function () {
             // Get Two-Step setup data

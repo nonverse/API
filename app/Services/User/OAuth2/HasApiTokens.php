@@ -29,7 +29,12 @@ trait HasApiTokens
      */
     public function tokenCan($scope): bool
     {
+        $parentScope = strtok($scope, '.') . '.*';
+
         if (in_array('*', explode(" ", $this->accessToken->scopes))) {
+            return true;
+        }
+        if (in_array($parentScope, explode(" ", $this->accessToken->scopes))) {
             return true;
         }
         if (in_array($scope, explode(" ", $this->accessToken->scopes))) {
