@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 /**
  * Get list of all services linked to user's account
  */
-Route::get('/', [\App\Http\Controllers\User\ServicesController::class, 'get'])->middleware('scope:user.services.read');
+Route::get('/', [\App\Http\Controllers\User\ServicesController::class, 'get'])->middleware('scope:user.*');
