@@ -21,7 +21,8 @@ Route::get('/', function () {
         'internal_identifier' => env('APP_IDENTIFIER'),
         'environment' => 'closed_development',
         'version' => env('APP_VERSION'),
-        'user' => null
+        'base_route' => '/',
+        'user' => null,
     ]);
 });
 

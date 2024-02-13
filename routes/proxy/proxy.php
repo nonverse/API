@@ -13,7 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('user')->group(base_path('routes/user/user.php'));
-Route::prefix('auth')->group(base_path('routes/auth.php'));
-
-Route::prefix('/')->group(base_path('routes/proxy/proxy.php'));
+Route::prefix('labs')->group(base_path('routes/proxy/labs/labs.php'));
