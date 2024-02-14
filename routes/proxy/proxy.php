@@ -2,15 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+/**
+ * Proxy routes
+ * These routes are used to send authorized requests to backend servers
+ * Each route in the backend server should have a corresponding route here
+ * with the appropriate authentication/authorization middlewares defined
+ *
+ * Endpoint: /
+ */
 
+// Labs
 Route::prefix('labs')->group(base_path('routes/proxy/labs/labs.php'));

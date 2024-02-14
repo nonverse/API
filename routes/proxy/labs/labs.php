@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 |
 | All routes should point to LabsProxyController::class, 'forward' and
 | MUST be present in the Labs API /api
+|
 |--------------------------------------------------------------------------
 |
 | Endpoint: /labs
