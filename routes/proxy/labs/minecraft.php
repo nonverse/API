@@ -14,4 +14,6 @@ use Illuminate\Support\Facades\Route;
 /**
  * Authentication required
  */
-Route::get('profile', [\App\Http\Controllers\Proxy\LabsProxyController::class, 'forward']);
+Route::middleware('auth:api')->prefix('profile')->group(function() {
+    Route::post('/', [\App\Http\Controllers\Proxy\LabsProxyController::class, 'forward'])->middleware('scope:labs.*');
+});
