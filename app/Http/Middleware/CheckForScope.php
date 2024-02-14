@@ -19,7 +19,7 @@ class CheckForScope
      * @param string $scopes
      * @return JsonResponse|RedirectResponse
      */
-    public function handle(Request $request, Closure $next, string $scopes): JsonResponse|RedirectResponse
+    public function handle(Request $request, Closure $next, string $scopes): JsonResponse|RedirectResponse|Response
     {
         foreach (explode(",", $scopes) as $scope) {
             if ($request->user()->tokenCan($scope)) {
