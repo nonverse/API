@@ -20,6 +20,6 @@ class ApplicationProxyService
         /**
          * Create new access token
          */
-        return JWT::encode($payload, config('oauth.private_key'), 'RS256');
+        return JWT::encode($payload, config('api.private_key'), 'RS256');
     }
 }
