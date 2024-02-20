@@ -18,5 +18,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [\App\Http\Controllers\Proxy\LabsProxyController::class, 'forward']);
 
 // Minecraft (Auth Required)
-Route::middleware('auth:api')->prefix('minecraft')->group(base_path('routes/proxy/labs/minecraft.php'));
+Route::prefix('minecraft')->group(base_path('routes/proxy/labs/minecraft.php'));
 
