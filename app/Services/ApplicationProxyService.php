@@ -14,12 +14,13 @@ class ApplicationProxyService
             'iss' => env('APP_URL'),
             'aud' => 'https://' . $target . '.nonverse.test/',
             'iat' => time(),
-            'exp' => time() + 60
+            'exp' => time() + 60,
+            'ttp' => 'api:xs'
         ];
 
         /**
          * Create new access token
          */
-        return JWT::encode($payload, config('api.private_key'), 'RS256');
+        return JWT::encode($payload, config('api.xs-private_key'), 'RS256');
     }
 }

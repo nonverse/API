@@ -29,10 +29,18 @@ class Keys extends Command
         $publicKey = './storage/api-public.key';
         $privateKey = './storage/api-private.key';
 
+        $xsPublicKey = './storage/api:xs-public.key';
+        $xsPrivateKey = './storage/api:xs-private.key';
+
+
         $key = RSA::createKey(4096);
+        $xsKey = RSA::createKey(4096);
 
         file_put_contents($publicKey, (string)$key->getPublicKey());
         file_put_contents($privateKey, (string)$key);
+
+        file_put_contents($xsPublicKey, (string)$xsKey->getPublicKey());
+        file_put_contents($xsPrivateKey, (string)$xsKey);
 
         return Command::SUCCESS;
     }
