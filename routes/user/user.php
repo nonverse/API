@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Create new user
+Route::post('/validate-username', [\App\Http\Controllers\User\UserController::class, 'validateUsername'])->middleware('auth.authkey');
 Route::post('/', [\App\Http\Controllers\User\UserController::class, 'store'])->middleware('auth.authkey');
 
 /**

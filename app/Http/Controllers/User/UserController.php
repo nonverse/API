@@ -161,4 +161,29 @@ class UserController extends Controller
             'success' => false
         ], 400);
     }
+
+    public function validateUsername(Request $request)
+    {
+        $validator = Validator::make($request->input(), [
+            'username' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return new JsonResponse([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        if ($this->repository->getBuilder()->where('username', $request->input('username'))->exists()) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'The username already exists'
+            ], 422);
+        }
+
+        return new JsonResponse([
+            'success' => true
+        ]);
+    }
 }
